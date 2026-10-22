@@ -1,0 +1,884 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+
+<title>胡臺寧靜時光</title>
+<meta name="description" content="胡志明市臺灣學校圖書資訊中心｜越安靜，小動物睡得越香甜的班級音量工具">
+<meta property="og:title" content="胡臺寧靜時光">
+<meta property="og:description" content="越安靜，小動物睡得越香甜。圖書館時鐘版・班級挑戰版">
+<meta property="og:type" content="website">
+<meta name="twitter:title" content="胡臺寧靜時光">
+<meta name="apple-mobile-web-app-title" content="胡臺寧靜時光">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@700;900&family=Noto+Sans+TC:wght@500;700;900&family=Baloo+2:wght@700;800&family=LXGW+WenKai+TC:wght@400;700&display=swap">
+<style>
+/* Layout: paper card on the left holds clock/countdown, 小橘 rests on a ledge at right. Five skins swap the tokens below. Sized in vmin so it scales from laptop to 4K. */
+:root{
+  --bg:#5a3a24; --shelf:#3b2516; --card:#fbf3e4; --line:#eadcc4; --ink:#3b2516; --soft:#8a6a4e;
+  --num:#5a3a24; --btn:#5a3a24; --btnInk:#fbf3e4; --good:#5f8a3f; --bad:#b5483c; --gold:#e0b84c;
+  --credit:#8d6b4f; --zzz:#fbf3e4; --tool:rgba(251,243,228,.16); --toolInk:#fbf3e4;
+  --f-display:"Noto Serif TC","Songti TC","PMingLiU",serif;
+  --f-body:"Noto Sans TC","PingFang TC","Microsoft JhengHei",sans-serif;
+  --f-num:"Baloo 2","Noto Sans TC",system-ui,sans-serif;
+  color-scheme:light;
+}
+body[data-skin="night"]{--bg:#131b33;--shelf:#1d2747;--card:#1c2647;--line:#2c3a66;--ink:#f6efe2;--soft:#a9b6d3;--num:#f6efe2;--btn:#f8e3a0;--btnInk:#131b33;--good:#9d8cf0;--bad:#ff8a65;--gold:#f8e3a0;--credit:#4d5a82;--zzz:#e8e2ff;--tool:rgba(255,255,255,.1);--toolInk:#f6efe2}
+body[data-skin="chalk"]{--bg:#2f4a3c;--shelf:#6e4527;--card:#36584a;--line:#4b6d5d;--ink:#f4f1e6;--soft:#c8d8c9;--num:#f4f1e6;--btn:#f2c94c;--btnInk:#2f4a3c;--good:#f4f1e6;--bad:#f2a65a;--gold:#f2c94c;--credit:#6f8f7f;--zzz:#f4f1e6;--tool:rgba(255,255,255,.12);--toolInk:#f4f1e6;--f-display:"LXGW WenKai TC","Kaiti TC",serif;--f-body:"LXGW WenKai TC","Noto Sans TC",sans-serif}
+body[data-skin="minimal"]{--bg:#f3f1ec;--shelf:#e2ddd4;--card:#ffffff;--line:#ebe6dd;--ink:#26221d;--soft:#7a7268;--num:#26221d;--btn:#e8792b;--btnInk:#ffffff;--good:#3a9a6a;--bad:#d0533f;--gold:#e8792b;--credit:#c2bbb0;--zzz:#7a7268;--tool:rgba(38,34,29,.07);--toolInk:#26221d;--f-display:"Noto Sans TC",sans-serif}
+body[data-skin="dream"]{--bg:#7fb2e5;--shelf:#eef5ff;--card:#f7fbff;--line:#dde9f7;--ink:#1f3a5c;--soft:#557192;--num:#1f3a5c;--btn:#3a7bd5;--btnInk:#ffffff;--good:#3a7bd5;--bad:#e8792b;--gold:#f0a640;--credit:#e9f2ff;--zzz:#ffffff;--tool:rgba(255,255,255,.6);--toolInk:#1f3a5c}
+body[data-skin="shelf"]{background:#5a3a24 url(img/bg_shelf.webp) center bottom/cover no-repeat;--hudInk:#fff6e6;--hudSoft:#f3dfc0;--halo:#3b2516;--haloW:.55vmin;--glow:1.6vmin;--stateC:#ffe7b0}
+body[data-skin="night"]{--hudInk:#fff8e7;--hudSoft:#d6def5;--halo:#0e1428;--haloW:.45vmin;--glow:1.4vmin;--stateC:#f8e3a0}
+body[data-skin="chalk"]{--hudInk:#fbf8ee;--hudSoft:#dfe9df;--halo:#203328;--haloW:.45vmin;--glow:1.2vmin;--stateC:#f2c94c}
+body[data-skin="minimal"]{--hudInk:#26221d;--hudSoft:#7a7268;--stateC:#e8792b}
+body[data-skin="dream"]{--hudInk:#ffffff;--hudSoft:#ffffff;--halo:#2f5f9e;--haloW:.55vmin;--glow:1.8vmin;--stateC:#ffffff}
+body[data-fuss="1"]{--stateC:#ffb43a!important}
+body[data-stage="wake"]{--stateC:#ff6a4d!important}
+body[data-skin="shelf"] .d-shelf{display:none}
+body[data-skin="shelf"] .plank{display:none}
+body[data-skin="shelf"] .cat{margin-bottom:15.5vh;--catW:54vmin}
+body[data-skin="night"]{background:#0e1428 url(img/bg_night.webp) center bottom/cover no-repeat}
+body[data-skin="night"] .d-night,body[data-skin="night"] .plank{display:none!important}
+body[data-skin="night"] .cat{margin-bottom:28vh;--catW:46vmin}
+body[data-skin="chalk"]{background:#2f4a3c url(img/bg_chalk.webp) center bottom/cover no-repeat}
+body[data-skin="dream"]{background:#7fb2e5 url(img/bg_dream.webp) center bottom/cover no-repeat}
+body[data-skin="camp"]{--bg:#0d1324;--shelf:#2a2216;--card:#151c30;--line:#2a3350;--ink:#fff4e3;--soft:#c9bfae;--num:#fff4e3;--btn:#f5a54a;--btnInk:#1a1208;--good:#f5c46b;--bad:#ff7a5c;--gold:#f5c46b;--credit:#4c5675;--zzz:#fff4e3;--tool:rgba(255,255,255,.1);--toolInk:#fff4e3}
+body[data-skin="camp"]{background:#0d1324 url(img/bg_camp.webp) center bottom/cover no-repeat;--hudInk:#fff8ec;--hudSoft:#e9dcc6;--halo:#0a0f1c;--haloW:.45vmin;--glow:1.6vmin;--stateC:#ffcf86}
+body[data-skin="camp"] .plank{display:none!important}
+body[data-skin="camp"] .cat{margin-bottom:12vh;--catW:50vmin}
+body[data-skin="cave"]{--bg:#081a22;--shelf:#0f2a33;--card:#0f2830;--line:#1f4450;--ink:#e9fbff;--soft:#9cc7d1;--num:#e9fbff;--btn:#ffc96b;--btnInk:#0b1f26;--good:#5fe0d0;--bad:#ff8a65;--gold:#ffc96b;--credit:#3d6470;--zzz:#e0fff9;--tool:rgba(255,255,255,.1);--toolInk:#e9fbff}
+body[data-skin="cave"]{background:#081a22 url(img/bg_cave.webp) center bottom/cover no-repeat;--hudInk:#f2fffd;--hudSoft:#bfe9ef;--halo:#04131a;--haloW:.45vmin;--glow:1.6vmin;--stateC:#ffd98a}
+body[data-skin="cave"] .plank{display:none!important}
+body[data-skin="cave"] .cat{margin-bottom:16vh;--catW:50vmin}
+body[data-skin="jungle"]{--bg:#1f3a24;--shelf:#2c4a2c;--card:#f4f8ee;--line:#dde8d2;--ink:#1e3320;--soft:#55705a;--num:#1e3320;--btn:#3f7a3a;--btnInk:#ffffff;--good:#3f7a3a;--bad:#d0533f;--gold:#e8c14c;--credit:#9bb89a;--zzz:#f1ffd8;--tool:rgba(255,255,255,.14);--toolInk:#f1f8e8}
+body[data-skin="jungle"]{background:#1f3a24 url(img/bg_jungle.webp) center bottom/cover no-repeat;--hudInk:#fbfff2;--hudSoft:#e3f2cf;--halo:#12240f;--haloW:.55vmin;--glow:1.6vmin;--stateC:#f6f0a8}
+body[data-skin="jungle"] .plank{display:none!important}
+body[data-skin="jungle"] .cat{margin-bottom:31vh;--catW:44vmin}
+body[data-skin="dream"] .d-dream,body[data-skin="dream"] .plank{display:none!important}
+body[data-skin="dream"] .cat{margin-bottom:9vh}
+body[data-skin="chalk"] .d-chalk,body[data-skin="chalk"] .plank{display:none!important}
+body[data-skin="chalk"] .cat{margin-bottom:6vh}
+[hidden]{display:none!important}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);overflow:hidden;transition:background .4s}
+button,input{font:inherit}
+button:focus-visible,input:focus-visible{outline:.4vmin solid var(--gold);outline-offset:.3vmin}
+
+/* decor per skin */
+.decor{position:fixed;inset:0;pointer-events:none;display:none}
+body[data-skin="shelf"] .d-shelf,body:not([data-skin]) .d-shelf{display:grid}
+body[data-skin="night"] .d-night,body[data-skin="chalk"] .d-chalk,body[data-skin="dream"] .d-dream{display:block}
+.d-shelf{grid-template-rows:repeat(3,minmax(0,1fr));gap:3.4vmin;padding:3.6vmin 5vmin;box-sizing:border-box}
+.shelf{border-bottom:2.2vmin solid var(--shelf);display:flex;align-items:flex-end;justify-content:flex-end;gap:.9vmin;padding-right:6vw}
+.shelf i{display:block;width:3.9vmin;border-radius:.3vmin .3vmin 0 0}
+.d-night .moon{position:absolute;right:8vw;top:7vmin;width:14vmin;height:14vmin;border-radius:50%;box-shadow:-3vmin 2vmin 0 0 #f8e3a0;transform:rotate(-20deg)}
+.d-night .st{position:absolute;width:.7vmin;height:.7vmin;border-radius:50%;background:#f8e3a0;opacity:.8}
+.d-night .ground{position:absolute;left:0;right:0;bottom:0;height:22vh;background:#1d2747}
+.d-chalk{border:3.4vmin solid #8a5a34;box-sizing:border-box;box-shadow:inset 0 0 14vmin rgba(0,0,0,.35)}
+.d-chalk .tray{position:absolute;left:0;right:0;bottom:0;height:3vmin;background:#6e4527}
+.d-chalk .tray i{position:absolute;bottom:.8vmin;height:1.2vmin;border-radius:.3vmin}
+.d-dream .cl{position:absolute;border-radius:50%;background:#ffffff}
+.dim{position:fixed;inset:0;background:#120a05;opacity:0;pointer-events:none;transition:opacity 1.5s}
+
+.app{position:relative;height:100%;box-sizing:border-box;padding-block:4vmin;padding-left:max(16px,4.5vw,env(safe-area-inset-left,0px));padding-right:max(16px,4.5vw,env(safe-area-inset-right,0px));display:grid;grid-template-columns:minmax(0,40fr) minmax(0,60fr);gap:4vw;align-items:stretch}
+
+.card{background:var(--card);color:var(--ink);border-radius:1.2vmin;box-shadow:0 3vmin 6vmin rgba(0,0,0,.28);padding:4.4vmin 4.4vmin 3.6vmin;display:flex;flex-direction:column;gap:2.6vmin;min-width:0;min-height:0;overflow:auto}
+body[data-skin="minimal"] .card{box-shadow:none;background:transparent;padding-left:0}
+.brand{display:flex;align-items:center;gap:1.8vmin}
+.brand img{width:8.6vmin;height:8.6vmin;object-fit:contain;flex:none}
+body[data-skin="night"] .brand img,body[data-skin="chalk"] .brand img{background:#fbf3e4;border-radius:50%;padding:.6vmin}
+.brand small{display:block;font-size:2vmin;letter-spacing:.14em;color:var(--soft)}
+.brand h1{margin:0;font-family:var(--f-display);font-weight:900;font-size:min(4.8vmin,3vw);line-height:1.15;text-wrap:balance}
+.modes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));background:var(--line);border-radius:999px;padding:.6vmin}
+.modes button{border:0;border-radius:999px;padding:1.3vmin 0;font-size:2.4vmin;font-weight:700;color:var(--soft);background:transparent;cursor:pointer}
+.modes button[aria-pressed="true"]{background:var(--btn);color:var(--btnInk)}
+
+.big{font-family:var(--f-num);font-weight:800;line-height:.9;color:var(--num);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.card{container-type:inline-size}
+.clock .big{font-size:9vw;font-size:min(17vmin,29cqi);white-space:nowrap}
+.clock .big span{font-size:.38em;color:var(--soft);margin-left:.4vmin}
+.date{font-size:2.6vmin;color:var(--soft);font-weight:700}
+.status{font-size:3.4vmin;font-weight:900}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1.4vmin}
+.stat{border-top:.4vmin solid var(--line);padding-top:1.2vmin;display:flex;flex-direction:column;gap:.4vmin;min-width:0}
+.stat b{font-family:var(--f-num);font-size:5vmin;line-height:1;font-variant-numeric:tabular-nums}
+.stat small{font-size:1.9vmin;color:var(--soft)}
+
+.challenge .big{font-size:10vw;font-size:min(20vmin,34cqi);white-space:nowrap}
+.chips{display:flex;flex-wrap:wrap;gap:1.2vmin;align-items:center}
+.chips{display:grid;grid-template-columns:repeat(6,minmax(0,1fr))}
+.chips .custom{grid-column:span 3}
+.chip{border:.35vmin solid var(--btn);background:transparent;color:var(--ink);border-radius:999px;padding:1vmin 0;font-size:2.4vmin;font-weight:700;cursor:pointer;font-variant-numeric:tabular-nums}
+.chip[aria-pressed="true"]{background:var(--btn);color:var(--btnInk)}
+.custom{display:flex;align-items:center;gap:.8vmin;font-size:2.2vmin;color:var(--soft)}
+.custom input{width:8vmin;text-align:center;font-size:2.4vmin;font-weight:700;border:.35vmin solid var(--line);border-radius:1vmin;padding:.8vmin;background:var(--card);color:var(--ink)}
+.primary{border:0;border-radius:999px;background:var(--bad);color:#fff;font-size:3.2vmin;font-weight:900;padding:1.8vmin 0;cursor:pointer}
+body[data-skin="night"] .primary,body[data-skin="chalk"] .primary{background:var(--btn);color:var(--btnInk)}
+.primary:hover{filter:brightness(1.08)}
+.row{display:flex;gap:1.2vmin;flex-wrap:wrap}
+.ghost{border:.35vmin solid var(--btn);background:transparent;color:var(--ink);border-radius:999px;padding:1vmin 2.6vmin;font-size:2.2vmin;font-weight:700;cursor:pointer}
+.label{font-size:2vmin;font-weight:700;color:var(--soft);letter-spacing:.06em}
+
+.meterBox{margin-top:auto;display:flex;flex-direction:column;gap:1vmin}
+.meterHead{display:flex;justify-content:space-between;align-items:center;font-size:2vmin;color:var(--soft);gap:1vmin;flex-wrap:wrap}
+.meter{position:relative;height:3.4vmin;border-radius:.8vmin;background:var(--line);overflow:hidden}
+.meter .lvl{position:absolute;inset:0 auto 0 0;width:0;background:var(--good);transition:width .08s linear}
+.meter .lvl.warn{background:var(--gold)}
+.meter .lvl.loud{background:var(--bad)}
+.meter .rm{position:absolute;top:0;bottom:0;width:0;border-left:.4vmin dashed var(--ink);opacity:.55;transform:translateX(-50%)}
+.meter .th{position:absolute;top:0;bottom:0;width:.6vmin;background:var(--ink);transform:translateX(-50%)}
+.thRow{display:flex;align-items:center;gap:1.2vmin;font-size:2vmin;color:var(--soft)}
+.thRow input{flex:1;accent-color:var(--btn)}
+.micBtn{border:0;background:var(--btn);color:var(--btnInk);border-radius:999px;padding:.8vmin 2vmin;font-size:1.9vmin;font-weight:700;cursor:pointer}
+.mbtns{display:flex;gap:.8vmin;align-items:center}
+.micBtn.alt{background:transparent;color:var(--ink);box-shadow:inset 0 0 0 .25vmin var(--line)}
+.micBtn.q{width:3.8vmin;height:3.8vmin;padding:0;font-family:var(--f-num);font-size:2.2vmin}
+.micBtn.busy{background:var(--gold);color:var(--btnInk);box-shadow:none}
+.calMsg{font-size:1.8vmin;color:var(--soft);min-height:2.4vmin}
+.calMsg:empty{display:none}
+.help .sheet{display:block;width:min(170vmin,100%)}
+.hcols{column-count:2;column-gap:5vmin}
+.hcols section{break-inside:avoid}
+.hcols section:first-child h3{margin-top:0}
+@media (min-aspect-ratio:3/2){.hcols{column-count:3}}
+@media (max-aspect-ratio:1/1){.hcols{column-count:1}}
+.help h2{margin:0 0 2vmin}
+.help h3{margin:2.6vmin 0 .8vmin;font-size:2.8vmin;font-weight:900}
+.help p,.help li{font-size:2.3vmin;line-height:1.6;margin:.4vmin 0;color:var(--ink)}
+.help ul{margin:0;padding-left:3vmin}
+.help .muted{color:var(--soft)}
+.help table{width:100%;border-collapse:collapse;font-size:2.2vmin;margin-top:.6vmin}
+.help th,.help td{text-align:left;padding:.9vmin 1.2vmin;border-bottom:.15vmin solid var(--line)}
+.help th{color:var(--soft);font-weight:700}
+.help .primary{padding:1.6vmin 5vmin;font-size:2.6vmin}
+.help .close{margin-top:3vmin;display:flex;justify-content:flex-end}
+.demo{font-size:1.9vmin;color:var(--bad);display:flex;align-items:center;gap:1vmin}
+.demo input{flex:1;accent-color:var(--bad)}
+
+.catzone{position:relative;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding-top:7vmin;box-sizing:border-box}
+.bubble{display:none!important}
+/* HUD: streak + big state word float beside the animal, no boxes; --halo outlines text on busy backgrounds */
+.hud{position:relative;z-index:3;width:min(86vmin,100%);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:2vmin;margin-bottom:calc(var(--hudTuck,-6vmin));pointer-events:none}
+.halo{paint-order:stroke fill;-webkit-text-stroke:var(--haloW,0) var(--halo,transparent);text-shadow:0 0 var(--glow,0) var(--halo,transparent)}
+.stateCol{margin-left:auto;display:flex;flex-direction:column;align-items:flex-end;gap:1.2vmin;min-width:0}
+.say{font-weight:800;font-size:min(3vmin,4.2vw);line-height:1.35;color:var(--hudInk,var(--ink));max-width:min(40vmin,46vw);text-align:right;opacity:0;transform:translateY(.8vmin);transition:opacity .8s,transform .8s}
+.say.on{opacity:.92;transform:none}
+.stateText{font-family:var(--f-display);font-weight:900;font-size:min(11vmin,15vw);line-height:1;letter-spacing:.06em;color:var(--stateC,var(--good));opacity:.62;white-space:nowrap;transition:color .4s,opacity .4s}
+body[data-fuss="1"] .stateText{animation:pulse 1.1s ease-in-out infinite}
+body[data-stage="wake"] .stateText{opacity:.8}
+@keyframes pulse{50%{opacity:.85;transform:scale(1.04)}}
+.cat{position:relative;width:min(60vmin,100%);aspect-ratio:1;max-width:100%;margin-bottom:3.5vmin}
+.cat img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;transition:opacity 1.1s ease-in-out 1s;transform:translateY(calc(var(--pad,0) * 100%))}
+/* fade OUT first (no delay), then the next pose fades IN after 1 s */
+.cat img.out{transition:opacity 1s ease-in-out 0s}
+body[data-stage="wake"] .cat img{transition-duration:.25s;transition-delay:0s}
+.cat img.out{opacity:0}
+.plank{position:absolute;left:4%;right:4%;bottom:4vmin;height:3vmin;background:var(--shelf);border-radius:.4vmin;box-shadow:0 1.2vmin 2vmin rgba(0,0,0,.2)}
+body[data-skin="night"] .plank,body[data-skin="dream"] .plank{height:5vmin;border-radius:50%;opacity:.8}
+body[data-skin="minimal"] .plank{height:.6vmin;box-shadow:none}
+/* continuous-quiet streak */
+.streak{position:relative;color:var(--hudInk,var(--ink));display:flex;flex-direction:column;gap:.3vmin;transition:transform .3s;transform-origin:left bottom}
+.streak small{font-size:2.4vmin;font-weight:800;color:var(--hudSoft,var(--soft))}
+.streak b{font-family:var(--f-num);font-weight:800;font-size:11vmin;line-height:.95;font-variant-numeric:tabular-nums;color:var(--hudInk,var(--num))}
+.streak .sub{display:flex;flex-direction:column;gap:.2vmin;font-size:2.1vmin;font-weight:700;color:var(--hudSoft,var(--soft));font-variant-numeric:tabular-nums}
+.streak .plus{position:absolute;right:-1vmin;top:-1.6vmin;background:var(--gold);color:var(--btnInk);font-weight:900;font-size:2.4vmin;padding:.6vmin 1.6vmin;border-radius:999px;opacity:0;transform:translateY(1vmin) scale(.8);pointer-events:none}
+.streak.milestone{transform:scale(1.08)}
+.streak.milestone b{color:var(--gold)}
+.streak.milestone .plus{animation:plus 1.8s ease-out}
+@keyframes plus{0%{opacity:0;transform:translateY(1vmin) scale(.8)}15%{opacity:1;transform:translateY(0) scale(1.05)}80%{opacity:1}100%{opacity:0;transform:translateY(-2vmin) scale(1)}}
+.streak.broken b{color:var(--bad)}
+.streak.idle{opacity:.55}
+.bubble{position:absolute;left:66%;top:4%;z-index:4;font-size:min(6vmin,9vw);background:#fff;color:#2a1a0e;border:.6vmin solid #2a1a0e;border-radius:3vmin;padding:2vmin 3.4vmin;font-size:6vmin;font-weight:900;transform:translateX(-50%) scale(.6);opacity:0;transition:.25s;white-space:nowrap}
+.bubble.show{transform:translateX(-50%);opacity:1}
+/* sway + breathing (on wrapper; imgs keep their own --pad offset) */
+.rock{position:absolute;inset:0;transform-origin:50% 92%;animation:sway 5s ease-in-out infinite}
+body[data-stage="light"] .rock{animation-duration:3.8s;--amp:4deg}
+body[data-stage="mid"] .rock{--amp:3deg}
+body[data-stage="deep"] .rock{animation:breathe 4.2s ease-in-out infinite}
+body[data-stage="wake"] .rock{animation:shake .35s linear 4}
+body[data-fuss="1"]:not([data-stage="wake"]) .rock{animation:sway 1.1s ease-in-out infinite;--amp:2.6deg}
+.fuss{position:absolute;inset:0;pointer-events:none;z-index:3;opacity:0;transition:opacity .4s}
+body[data-fuss="1"]:not([data-stage="wake"]) .fuss{opacity:1}
+.fuss .vein{position:absolute;left:58%;top:16%;font-size:min(9vmin,13vw);line-height:1;transform-origin:50% 50%;animation:vein 1.1s ease-in-out infinite}
+@keyframes vein{0%,100%{transform:scale(.85) rotate(-8deg)}50%{transform:scale(1.12) rotate(6deg)}}
+body[data-fuss="1"] .zz span{animation-duration:1.6s}
+.testbar{position:fixed;left:50%;bottom:1.2vmin;transform:translateX(-50%);z-index:50;background:rgba(20,16,12,.88);color:#fff;font:600 13px/1.4 system-ui,sans-serif;padding:8px 14px;border-radius:12px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;max-width:calc(100vw - 24px);box-sizing:border-box}
+.testbar label{display:inline-flex;gap:6px;align-items:center;white-space:nowrap}.testbar input[type=range]{width:150px}.testbar input[type=checkbox]{width:auto;margin:0}.testbar b{color:#ffd36b;font-variant-numeric:tabular-nums}
+@keyframes sway{0%,100%{transform:rotate(calc(var(--amp,3deg)*-1)) translateY(0)}25%{transform:rotate(0deg) translateY(-.6vmin)}50%{transform:rotate(var(--amp,3deg)) translateY(0)}75%{transform:rotate(0deg) translateY(-.6vmin)}}
+@keyframes breathe{0%,100%{transform:rotate(-2deg) scale(1,1)}50%{transform:rotate(2deg) scale(1.03,1.06)}}
+@keyframes shake{0%,100%{transform:translateX(0) rotate(0)}25%{transform:translateX(-1.2vmin) rotate(-2deg)}75%{transform:translateX(1.2vmin) rotate(2deg)}}
+/* soft contact shadow so 小橘 sits on the surface */
+.shadow{position:absolute;left:14%;right:14%;bottom:-1.2vmin;height:4.5vmin;border-radius:50%;background:radial-gradient(closest-side,rgba(0,0,0,.42),rgba(0,0,0,0));animation:shade 5s ease-in-out infinite}
+body[data-skin="minimal"] .shadow,body[data-skin="dream"] .shadow{background:radial-gradient(closest-side,rgba(60,40,80,.22),rgba(0,0,0,0))}
+@keyframes shade{50%{transform:scaleX(1.05)}}
+/* floating Z Z Z */
+.zz{position:absolute;right:6%;top:4%;width:30%;height:40%;pointer-events:none}
+.zz span{position:absolute;left:0;bottom:0;font-family:var(--f-num);font-weight:800;color:var(--zzz);opacity:0;text-shadow:0 .3vmin 1vmin rgba(0,0,0,.25)}
+.zz span:nth-child(1){font-size:5vmin;animation:zfly 3.6s ease-out infinite}
+.zz span:nth-child(2){font-size:6.5vmin;animation:zfly 3.6s ease-out 1.2s infinite}
+.zz span:nth-child(3){font-size:8vmin;animation:zfly 3.6s ease-out 2.4s infinite}
+body[data-stage="light"] .zz span:nth-child(n+2),body[data-stage="mid"] .zz span:nth-child(3){display:none}
+body[data-stage="wake"] .zz{display:none}
+body[data-stage="deep"] .zz span{animation-duration:4.4s}
+@keyframes zfly{0%{opacity:0;transform:translate(0,0) rotate(-12deg) scale(.6)}20%{opacity:1}100%{opacity:0;transform:translate(9vmin,-16vmin) rotate(14deg) scale(1.15)}}
+/* twinkling sparkles */
+.sparks{position:absolute;inset:-6% -8% 10% -8%;pointer-events:none}
+.sparks i{position:absolute;width:4.6vmin;height:4.6vmin;background:var(--gold);clip-path:polygon(50% 0,61% 39%,100% 50%,61% 61%,50% 100%,39% 61%,0 50%,39% 39%);opacity:0;filter:drop-shadow(0 0 .8vmin var(--gold));animation:twinkle 2.8s ease-in-out infinite}
+.sparks i:nth-child(1){left:6%;top:18%;animation-delay:.2s}
+.sparks i:nth-child(2){left:22%;top:2%;width:3.1vmin;height:3.1vmin;animation-delay:1.1s}
+.sparks i:nth-child(3){right:4%;top:40%;animation-delay:.7s}
+.sparks i:nth-child(4){left:2%;top:55%;width:3.4vmin;height:3.4vmin;animation-delay:1.9s}
+.sparks i:nth-child(5){right:18%;top:8%;width:2.8vmin;height:2.8vmin;animation-delay:2.3s}
+.sparks i:nth-child(6){left:44%;top:-4%;width:3.6vmin;height:3.6vmin;animation-delay:1.5s}
+.sparks i:nth-child(7){right:0;top:72%;width:2.8vmin;height:2.8vmin;animation-delay:.4s}
+body[data-stage="light"] .sparks i:nth-child(n+3){display:none}
+body[data-stage="mid"] .sparks i:nth-child(n+5){display:none}
+body[data-stage="wake"] .sparks{display:none}
+@keyframes twinkle{0%,100%{opacity:0;transform:scale(.3) rotate(0)}45%{opacity:1;transform:scale(1) rotate(45deg)}60%{opacity:.85;transform:scale(.9) rotate(60deg)}}
+
+.tools{position:fixed;top:max(1.6vmin,env(safe-area-inset-top,0px));right:max(1.6vmin,env(safe-area-inset-right,0px));display:flex;gap:1vmin;z-index:6;align-items:flex-start}
+.tools>button,.skinWrap>button{border:0;background:var(--tool);color:var(--toolInk);border-radius:999px;padding:.9vmin 2vmin;font-size:1.8vmin;font-weight:700;cursor:pointer}
+.skinWrap{position:relative}
+.skinMenu{position:absolute;right:0;top:calc(100% + 1vmin);background:#fffaf2;color:#2a1a0e;border-radius:1.4vmin;box-shadow:0 2vmin 5vmin rgba(0,0,0,.35);padding:1.2vmin;display:flex;flex-direction:column;gap:.6vmin;min-width:30vmin}
+.skinMenu button{display:flex;align-items:center;gap:1.4vmin;border:0;background:transparent;border-radius:1vmin;padding:1vmin 1.4vmin;font-size:2.1vmin;font-weight:700;color:#2a1a0e;cursor:pointer;text-align:left}
+.skinMenu button:hover{background:#f1e6d3}
+.cthumb{width:6vmin;height:6vmin;object-fit:contain;flex:none}
+.skinMenu button[aria-checked="true"]{background:#2a1a0e;color:#fffaf2}
+.sw{display:flex;flex:none;border-radius:.6vmin;overflow:hidden;box-shadow:0 0 0 .2vmin rgba(0,0,0,.15)}
+.sw i{width:2.2vmin;height:3.2vmin;display:block}
+.credit{position:fixed;right:max(1.6vmin,env(safe-area-inset-right,0px));bottom:max(1vmin,env(safe-area-inset-bottom,0px));font-size:max(11px,1.2vmin);color:var(--credit);z-index:2}
+
+.report{position:fixed;inset:0;background:rgba(20,14,10,.72);display:flex;align-items:center;justify-content:center;padding:3vmin;z-index:10}
+.sheet{background:var(--card);color:var(--ink);border-radius:1.6vmin;width:min(150vmin,100%);max-height:100%;overflow:auto;box-sizing:border-box;padding:4vmin;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.5fr);gap:3vmin 4vmin}
+.sheet .who{display:flex;flex-direction:column;align-items:center;gap:1vmin}
+.sheet .who img{width:100%;max-width:44vmin;aspect-ratio:1;object-fit:contain}
+.sheet h2{margin:0;font-family:var(--f-display);font-weight:900;font-size:5.2vmin;text-wrap:balance}
+.sheet .say{font-size:2.8vmin;font-weight:700;color:var(--soft);text-align:center}
+.sheet .right{display:flex;flex-direction:column;gap:2.4vmin;min-width:0}
+.rstats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.6vmin}
+.rstats div{background:var(--line);border-radius:1.2vmin;padding:1.6vmin;display:flex;flex-direction:column;gap:.4vmin}
+.rstats small{font-size:1.9vmin;color:var(--soft)}
+.rstats b{font-family:var(--f-num);font-size:5.6vmin;line-height:1}
+.rstats b.word{font-family:var(--f-body);font-size:4vmin;line-height:1.4}
+canvas#curve{width:100%;height:24vmin;display:block}
+.legend{display:flex;gap:2vmin;flex-wrap:wrap;font-size:1.8vmin;color:var(--soft)}
+.legend span{display:flex;align-items:center;gap:.6vmin}
+.legend i{width:1.8vmin;height:1.8vmin;border-radius:.3vmin;display:inline-block}
+.score{display:flex;align-items:center;gap:1.6vmin;flex-wrap:wrap}
+.score .n{margin-left:auto;font-size:2.2vmin;color:var(--soft)}
+.score .n b{font-family:var(--f-num);font-size:5vmin;color:var(--num)}
+
+@media (min-width:801px) and (max-aspect-ratio:1/1){.app{padding-top:9vmin}}
+@media (min-width:801px), (min-aspect-ratio:1/1){.hud{position:absolute;top:7vmin;left:50%;transform:translateX(-50%);margin:0}}
+.cat{width:min(var(--catW,60vmin),100%)}
+@media (min-width:801px) and (max-aspect-ratio:4/3){body[data-skin="night"] .cat,body[data-skin="jungle"] .cat{--catW:36vmin}}
+@media (min-width:801px) and (max-width:1200px){html:not([lang="zh-Hant"]) .app{padding-top:10vmin}}
+html:not([lang="zh-Hant"]) .stateText{font-size:min(9vmin,13vw)}
+.tools{flex-wrap:wrap;justify-content:flex-end;max-width:calc(100vw - 3.2vmin)}
+@media (min-width:801px) and (max-width:1200px){.bubble{left:74%;top:14%;font-size:min(6vmin,4.4vw)}}
+@media (max-width:800px) and (max-aspect-ratio:1/1){
+  html,body{height:auto;min-height:100%}
+  body{overflow-x:hidden;overflow-y:visible}
+  /* fixed full-screen backdrop: the scene photo stays behind the whole scrolling page */
+  body::before{content:"";position:fixed;inset:0;z-index:-1;background:inherit;background-size:cover;background-position:center bottom;pointer-events:none}
+  /* tool buttons scroll with the page in one swipeable row, never floating over the card */
+  .tools{position:absolute;top:max(10px,env(safe-area-inset-top,0px));left:12px;right:12px;flex-wrap:nowrap;justify-content:flex-start;overflow-x:auto;scrollbar-width:none;max-width:none;padding-bottom:2px}
+  .tools::-webkit-scrollbar{display:none}
+  .tools>button,.skinWrap>button{white-space:nowrap;font-size:min(3.4vw,15px);padding:min(2vw,9px) min(3.4vw,14px)}
+  .skinMenu{position:fixed;top:56px;right:12px;left:auto}
+  .app{padding-top:58px!important}
+  .app{grid-template-columns:1fr;height:auto;padding-top:9vmin}
+  .decor{display:none!important}
+  .cat{width:80vw}
+  .catzone{padding:4vw 4vw 0}
+  .hud{width:100%;--hudTuck:-4vw;flex-wrap:wrap;row-gap:2vw}
+  .stateCol{margin-left:auto}
+  html:not([lang="zh-Hant"]) .stateText{font-size:10vw}
+  .streak b{font-size:13vw}.streak small{font-size:3.8vw}.streak .sub{font-size:3.4vw}
+  .stateText{font-size:12vw}
+  .bubble{font-size:7vw;left:50%;top:-4%}
+  .sheet{grid-template-columns:1fr}
+  .clock .big{font-size:22vw}.challenge .big{font-size:24vw}
+  .skinMenu{min-width:60vw}
+}
+@media (prefers-reduced-motion:reduce){body[data-stage="wake"] .rock,.stateText{animation:none!important}}
+/* iPad / Safari: use the visible viewport height so toolbars never hide the bottom */
+@supports (height:100dvh){@media (min-width:801px), (min-aspect-ratio:1/1){.app{height:100dvh}}}
+/* tablet portrait (iPad 744–1024 wide): one screen, card on top in two columns, animal below — no scrolling */
+@media (min-width:700px) and (max-aspect-ratio:1/1) and (min-height:900px){
+  html,body{height:100%}
+  body{overflow:hidden}
+  body::before{content:none}
+  .app{grid-template-columns:1fr;grid-template-rows:auto minmax(0,1fr);height:100%;height:100dvh;gap:2vh;padding:calc(env(safe-area-inset-top,0px) + 62px) 4vw 2vh!important}
+  .tools{position:fixed;left:auto;right:16px;top:max(14px,env(safe-area-inset-top,0px));flex-wrap:nowrap;overflow:visible}
+  .tools>button,.skinWrap>button{font-size:15px;padding:8px 14px}
+  .skinMenu{position:absolute;top:calc(100% + 8px);right:0;min-width:240px}
+  .card{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:4vw;row-gap:1.6vh;padding:2.6vh 3.4vw;overflow:visible}
+  .brand{grid-column:1;grid-row:1}
+  .modes{grid-column:2;grid-row:1;align-self:center}
+  .clock,.challenge{grid-column:1;grid-row:2;gap:1vh!important}
+  .meterBox{grid-column:2;grid-row:2;margin-top:0;align-self:end}
+  .brand img{width:6vh;height:6vh}.brand h1{font-size:3.2vh}.brand small{font-size:1.4vh}
+  .clock .big{font-size:min(12vw,9vh)}.challenge .big{font-size:min(12vw,9vh)}
+  .date{font-size:1.9vh}.status{font-size:2.4vh}
+  .stat small,.meterHead,.thRow,.demo{font-size:1.6vh}.stat b{font-size:3.2vh}
+  .chips{gap:.8vh}.chip{font-size:1.8vh}
+  .catzone{padding:0}
+  .hud{position:absolute;top:1vh;left:50%;transform:translateX(-50%);width:min(92vw,100%);margin:0}
+  .streak b{font-size:7vh}.streak small{font-size:1.8vh}.streak .sub{font-size:1.6vh}
+  .stateText{font-size:7vh}html:not([lang="zh-Hant"]) .stateText{font-size:5.5vh}
+  .say{font-size:2vh;max-width:40vw}
+  .cat,body[data-skin] .cat{width:min(70vw,34vh)!important}
+  body[data-skin] .cat{margin-bottom:3vh!important}
+}
+</style>
+
+<div class="decor d-shelf" aria-hidden="true">
+  <div class="shelf"><i style="height:62%;background:#2f6f8f"></i><i style="height:54%;background:#c9873a"></i><i style="height:68%;background:#7f9b52"></i><i style="height:57%;background:#b5483c"></i><i style="height:64%;background:#e0b84c"></i><i style="height:60%;background:#6c5a9c"></i><i style="height:51%;background:#2f6f8f"></i></div>
+  <div class="shelf" style="justify-content:flex-start;padding-left:46vw"><i style="height:58%;background:#7f9b52"></i><i style="height:66%;background:#c9873a"></i><i style="height:52%;background:#2f6f8f"></i></div>
+  <div class="shelf"><i style="height:57%;background:#c9873a"></i><i style="height:65%;background:#b5483c"></i><i style="height:54%;background:#7f9b52"></i><i style="height:62%;background:#e0b84c"></i><i style="height:57%;background:#2f6f8f"></i><i style="height:60%;background:#6c5a9c"></i></div>
+</div>
+<div class="decor d-night" aria-hidden="true"><div class="ground"></div><div class="moon"></div><i class="st" style="left:46vw;top:12vh"></i><i class="st" style="left:63vw;top:30vh"></i><i class="st" style="left:88vw;top:42vh"></i><i class="st" style="left:72vw;top:8vh"></i><i class="st" style="left:55vw;top:46vh"></i></div>
+<div class="decor d-chalk" aria-hidden="true"><div class="tray"><i style="left:40vw;width:5vmin;background:#f4f1e6"></i><i style="left:47vw;width:4vmin;background:#f2c94c"></i><i style="left:53vw;width:3.6vmin;background:#f29a9a"></i></div></div>
+<div class="decor d-dream" aria-hidden="true"><i class="cl" style="left:-10vw;bottom:-16vh;width:50vw;height:38vh"></i><i class="cl" style="left:30vw;bottom:-22vh;width:58vw;height:42vh;background:#f6f4ff"></i><i class="cl" style="right:-8vw;bottom:-14vh;width:44vw;height:36vh;background:#eeecff"></i><i class="cl" style="right:12vw;top:8vh;width:16vw;height:9vh;opacity:.7"></i></div>
+<div class="dim" id="dim"></div>
+
+<div class="tools">
+  <div class="skinWrap">
+    <button type="button" id="skinBtn" aria-expanded="false" aria-controls="skinMenu" data-i18n="skinBtn">風格</button>
+    <div class="skinMenu" id="skinMenu" role="radiogroup" aria-label="選擇風格" hidden>
+      <button type="button" role="radio" data-skin="shelf" aria-checked="true"><span class="sw"><i style="background:#5a3a24"></i><i style="background:#fbf3e4"></i><i style="background:#b5483c"></i></span><span data-i18n="sk_shelf">圖書館書櫃</span></button>
+      <button type="button" role="radio" data-skin="night" aria-checked="false"><span class="sw"><i style="background:#131b33"></i><i style="background:#1c2647"></i><i style="background:#f8e3a0"></i></span><span data-i18n="sk_night">夜空月光</span></button>
+      <button type="button" role="radio" data-skin="chalk" aria-checked="false"><span class="sw"><i style="background:#2f4a3c"></i><i style="background:#8a5a34"></i><i style="background:#f2c94c"></i></span><span data-i18n="sk_chalk">黑板粉筆</span></button>
+      <button type="button" role="radio" data-skin="minimal" aria-checked="false"><span class="sw"><i style="background:#f3f1ec"></i><i style="background:#26221d"></i><i style="background:#e8792b"></i></span><span data-i18n="sk_minimal">極簡大字</span></button>
+      <button type="button" role="radio" data-skin="dream" aria-checked="false"><span class="sw"><i style="background:#7fb2e5"></i><i style="background:#f7fbff"></i><i style="background:#f0c9a8"></i></span><span data-i18n="sk_dream">雲朵夢境</span></button>
+      <button type="button" role="radio" data-skin="camp" aria-checked="false"><span class="sw"><i style="background:#0d1324"></i><i style="background:#151c30"></i><i style="background:#f5a54a"></i></span><span data-i18n="sk_camp">露宿野營</span></button>
+      <button type="button" role="radio" data-skin="cave" aria-checked="false"><span class="sw"><i style="background:#081a22"></i><i style="background:#0f2830"></i><i style="background:#5fe0d0"></i></span><span data-i18n="sk_cave">洞穴螢火</span></button>
+      <button type="button" role="radio" data-skin="jungle" aria-checked="false"><span class="sw"><i style="background:#1f3a24"></i><i style="background:#f4f8ee"></i><i style="background:#e8c14c"></i></span><span data-i18n="sk_jungle">叢林秘境</span></button>
+    </div>
+  </div>
+  <div class="skinWrap">
+    <button type="button" id="charBtn" aria-expanded="false" aria-controls="charMenu">角色</button>
+    <div class="skinMenu" id="charMenu" role="radiogroup" aria-label="選擇角色" hidden>
+      <button type="button" role="radio" data-char="cat" aria-checked="true"><img class="cthumb" src="img/xj29.webp" alt=""><span data-i18n="ch_cat">小橘（貓）</span></button>
+      <button type="button" role="radio" data-char="frog" aria-checked="false"><img class="cthumb" src="img/frog29.webp" alt=""><span data-i18n="ch_frog">胡小呱（青蛙）</span></button>
+    </div>
+  </div>
+  <div class="skinWrap">
+    <button type="button" id="langBtn" aria-expanded="false" aria-controls="langMenu">中／EN／VI</button>
+    <div class="skinMenu" id="langMenu" role="radiogroup" aria-label="Language" hidden>
+      <button type="button" role="radio" data-lang="zh" aria-checked="true">中文</button>
+      <button type="button" role="radio" data-lang="en" aria-checked="false">English</button>
+      <button type="button" role="radio" data-lang="vi" aria-checked="false">Tiếng Việt</button>
+    </div>
+  </div>
+  <button type="button" id="guideBtn" aria-haspopup="dialog" data-i18n="guide">說明</button>
+  <button type="button" id="dimBtn" aria-pressed="false">午休調暗</button>
+  <button type="button" id="fsBtn" data-i18n="fs">全螢幕</button>
+</div>
+
+<div class="app" id="app">
+  <section class="card" aria-live="polite">
+    <div class="brand">
+      <img src="img/emblem.webp" alt="胡志明市臺灣學校校徽" data-i18n-alt="emblem">
+      <div><small data-i18n="school">胡志明市臺灣學校 · 圖書資訊中心</small><h1 data-i18n="title">胡臺寧靜時光</h1></div>
+    </div>
+    <div class="modes" role="group" aria-label="版本">
+      <button type="button" id="mClock" aria-pressed="true" data-i18n="modeClock">時鐘版</button>
+      <button type="button" id="mChal" aria-pressed="false" data-i18n="modeChal">挑戰版</button>
+    </div>
+
+    <div class="clock" id="clockPane" style="display:flex;flex-direction:column;gap:1.6vmin">
+      <div class="big" id="clockTime">10:24<span>:08</span></div>
+      <div class="date" id="clockDate">10 月 17 日　星期六</div>
+      <div class="status" id="clockStatus">小橘睡熟了</div>
+      <div class="stats">
+        <div class="stat"><small data-i18n="cQuiet">今日安靜時間</small><b id="cQuiet">0:00</b></div>
+        <div class="stat"><small data-i18n="cWakes">今日吵醒</small><b id="cWakes">0</b></div>
+        <div class="stat"><small data-i18n="cRatio">安靜比例</small><b id="cRatio">—</b></div>
+      </div>
+    </div>
+
+    <div class="challenge" id="chalPane" hidden>
+      <div id="setup" style="display:flex;flex-direction:column;gap:2vmin">
+        <div class="label" data-i18n="chalMin">挑戰時間（分鐘）</div>
+        <div class="chips" id="chips">
+          <button type="button" class="chip" data-m="5" aria-pressed="true">5</button>
+          <button type="button" class="chip" data-m="10" aria-pressed="false">10</button>
+          <button type="button" class="chip" data-m="15" aria-pressed="false">15</button>
+          <button type="button" class="chip" data-m="20" aria-pressed="false">20</button>
+          <button type="button" class="chip" data-m="25" aria-pressed="false">25</button>
+          <button type="button" class="chip" data-m="30" aria-pressed="false">30</button>
+          <button type="button" class="chip" data-m="35" aria-pressed="false">35</button>
+          <button type="button" class="chip" data-m="40" aria-pressed="false">40</button>
+          <button type="button" class="chip" data-m="45" aria-pressed="false">45</button>
+          <button type="button" class="chip" data-m="50" aria-pressed="false">50</button>
+          <button type="button" class="chip" data-m="55" aria-pressed="false">55</button>
+          <button type="button" class="chip" data-m="60" aria-pressed="false">60</button>
+          <label class="custom" for="customMin"><span data-i18n="other">其他</span> <input id="customMin" type="number" min="1" max="180" inputmode="numeric" placeholder="分鐘" data-i18n-ph="minPh"> <span data-i18n="minUnit">分</span></label>
+        </div>
+        <div class="big" id="setTime">05:00</div>
+        <button type="button" class="primary" id="startBtn" data-i18n="start">開始挑戰</button>
+      </div>
+      <div id="running" hidden style="display:flex;flex-direction:column;gap:1.6vmin">
+        <div class="label" id="runLabel">剩餘時間</div>
+        <div class="big" id="countdown">05:00</div>
+        <div class="status" id="chalStatus">保持安靜，讓小橘入睡</div>
+        <div class="row"><button type="button" class="ghost" id="pauseBtn">暫停</button><button type="button" class="ghost" id="endBtn" data-i18n="endEarly">提前結算</button><button type="button" class="ghost" id="cancelBtn" data-i18n="cancel">取消</button></div>
+      </div>
+    </div>
+
+    <div class="meterBox">
+      <div class="meterHead"><span data-i18n="vol">班級音量</span><span class="mbtns"><button type="button" class="micBtn alt" id="calBtn" title="全班安靜 10 秒，自動設定門檻" data-i18n="cal" data-i18n-title="calTitle">試音</button><button type="button" class="micBtn alt q" id="helpBtn" aria-label="音量監測說明" title="音量監測說明" data-i18n-title="helpQ" data-i18n-aria="helpQ">?</button><button type="button" class="micBtn" id="micBtn">打開麥克風</button></span></div>
+      <div class="meter" aria-hidden="true"><div class="lvl" id="lvl"></div><div class="rm" id="rmMark"></div><div class="th" id="thMark"></div></div>
+      <label class="thRow" for="th"><span data-i18n="th">門檻</span> <input id="th" type="range" min="10" max="95" value="55"> <span id="thVal" style="font-family:var(--f-num);width:4vmin">55</span></label>
+      <div class="calMsg" id="calMsg" role="status" aria-live="polite"></div>
+      <label class="demo" id="demo" for="fake" hidden><span data-i18n="demo">示範音量</span> <input id="fake" type="range" min="0" max="100" value="18"></label>
+    </div>
+  </section>
+
+  <section class="catzone" aria-label="小動物" id="catzone">
+    <div class="hud" id="hud">
+    <div class="streak halo" id="streak" aria-live="off">
+      <small data-i18n="streak">連續安靜</small>
+      <b id="streakTime">0:00</b>
+      <div class="sub"><span id="streakBest">最長 0:00</span><span id="lastWake">今天還沒被吵醒</span></div>
+      <div class="plus" id="streakPlus" aria-hidden="true" data-i18n="plus1">+1 分鐘！</div>
+    </div>
+    <div class="stateCol"><div class="stateText halo" id="pillText" role="status">熟睡</div><div class="say halo" id="sayLine" aria-live="off"></div></div>
+    </div>
+    <div class="cat" id="cat">
+      <div class="shadow" aria-hidden="true"></div>
+      <div class="rock" id="rock">
+        <img id="catA" src="img/xj15.webp" alt="">
+        <img id="catB" class="out" src="img/xj15.webp" alt="">
+      </div>
+      <div class="zz" id="zz" aria-hidden="true"><span>Z</span><span>z</span><span>Z</span></div>
+      <div class="sparks" id="sparks" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+      <div class="fuss" id="fuss" aria-hidden="true"><div class="vein">💢</div></div>
+      <div class="bubble" id="bubble">喵！好吵！</div>
+    </div>
+    <div class="plank"></div>
+  </section>
+</div>
+
+<div class="report help" id="help" hidden>
+  <div class="sheet" role="dialog" aria-modal="true" aria-labelledby="hTitle">
+    <div id="helpBody"></div>
+    <div class="close"><button type="button" class="primary" id="helpClose" data-i18n="close">我知道了</button></div>
+  </div>
+</div>
+
+<div class="report" id="report" hidden>
+  <div class="sheet" role="dialog" aria-labelledby="rTitle">
+    <div class="who"><img id="rImg" src="img/xj29.webp" alt=""><div class="say" id="rSay">睡得超飽，下午有精神！</div></div>
+    <div class="right">
+      <h2 id="rTitle">今日小橘午睡品質</h2>
+      <div class="rstats">
+        <div><small data-i18n="r_quiet">安靜比例</small><b id="rQuiet">0%</b></div>
+        <div><small data-i18n="r_wakes">吵醒次數</small><b id="rWakes">0</b></div>
+        <div><small data-i18n="r_deep">最深睡到</small><b class="word" id="rDeep">深睡</b></div>
+        <div><small data-i18n="r_streak">最長連續安靜</small><b id="rStreak">0:00</b></div>
+      </div>
+      <canvas id="curve" width="1200" height="320" aria-label="睡意曲線" data-i18n-aria="r_curve"></canvas>
+      <div class="legend"><span><i style="background:#9fbf7a"></i><span data-i18n="st_light">淺睡</span></span><span><i style="background:#5f8a3f"></i><span data-i18n="st_mid">熟睡</span></span><span><i style="background:#3b5a26"></i><span data-i18n="st_deep">深睡</span></span><span><i style="background:#b5483c"></i><span data-i18n="lg_wake">被吵醒</span></span></div>
+      <div class="score">
+        <button type="button" class="primary" id="addPt" style="padding:1.6vmin 4vmin" data-i18n="addPt">全班加 1 分</button>
+        <button type="button" class="ghost" id="noPt" data-i18n="noPt">不加分，關閉</button>
+        <div class="n"><span data-i18n="scorePre">今天累積</span> <b id="score">0</b> <span data-i18n="scorePost">分</span></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="credit">圖資中心 蕭聿新設計</div>
+
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+const I18N={
+zh:{langName:'中文',skinBtn:'風格',sk_shelf:'圖書館書櫃',sk_night:'夜空月光',sk_chalk:'黑板粉筆',sk_minimal:'極簡大字',sk_dream:'雲朵夢境',sk_camp:'露宿野營',sk_cave:'洞穴螢火',sk_jungle:'叢林秘境',charBtn:'角色',ch_cat:'小橘（貓）',ch_frog:'胡小呱（青蛙）',guide:'說明',dim:'午休調暗',undim:'恢復亮度',fs:'全螢幕',
+school:'胡志明市臺灣學校 · 圖書資訊中心',title:'胡臺寧靜時光',emblem:'胡志明市臺灣學校校徽',modeClock:'時鐘版',modeChal:'挑戰版',cQuiet:'今日安靜時間',cWakes:'今日吵醒',cRatio:'安靜比例',
+chalMin:'挑戰時間（分鐘）',other:'其他',minPh:'分鐘',minUnit:'分',start:'開始挑戰',remain:'剩餘時間',napRemain:'午休剩餘',pause:'暫停',resume:'繼續',paused:'已暫停',endEarly:'提前結算',cancel:'取消',
+vol:'班級音量',cal:'試音',calTitle:'全班安靜 10 秒，自動設定門檻',calIng:'試音中',calAsk:'請全班安靜 10 秒⋯',calDone:'安靜基準 {b}，門檻已設為 {t}。',helpQ:'音量監測說明',micOpen:'打開麥克風',micOn:'麥克風已開啟',micRetry:'重試麥克風',th:'門檻',demo:'示範音量',
+streak:'連續安靜',best:'最長 {x}',noWake:'今天還沒被吵醒',lastWake:'上次吵醒 {hm}・{ago}',justNow:'剛剛',minsAgo:'{n} 分鐘前',plus1:'+1 分鐘！',
+st_wake:'被吵醒了',st_light:'淺睡',st_mid:'熟睡',st_deep:'深睡',st_fuss:'皺眉了',
+msg_wakeLong:'吵太久，{n}被吵醒了！',msg_wake:'{n}被吵醒了！',msg_fuss:'{n}皺眉了，小聲一點⋯',msg_deep:'{n}睡得好熟⋯',msg_mid:'{n}睡著了',msg_light:'{n}想睡了⋯',msg_nomic:'按「打開麥克風」開始偵測',chalKeep:'保持安靜，讓{n}入睡',
+r_good:'睡得超飽，下午有精神！',r_ok:'有睡著，但被吵醒了幾次。',r_bad:'今天沒睡好，下次再安靜一點。',r_titleNap:'今日{n}午睡品質',r_title:'{n}這次睡得如何',r_quiet:'安靜比例',r_wakes:'吵醒次數',r_deep:'最深睡到',r_streak:'最長連續安靜',r_curve:'睡意曲線',lg_wake:'被吵醒',
+addPt:'全班加 1 分',noPt:'不加分，關閉',scorePre:'今天累積',scorePost:'分',curveStart:'開始',curveMin:'{m} 分',close:'我知道了',
+names:{cat:'小橘',frog:'胡小呱'},cries:{cat:'喵！好吵！',frog:'呱！好吵！'},snore:{cat:'呼嚕',frog:'咕嚕呱'},
+date:d=>(d.getMonth()+1)+' 月 '+d.getDate()+' 日　星期'+'日一二三四五六'[d.getDay()],
+lines:['{s}⋯好安靜，好舒服～','謝謝大家，讓我睡得好香','噓⋯我夢到一整座圖書館','你們好棒，我快睡著了⋯','這麼安靜，我可以多睡一下嗎？','夢裡有好多好看的書','再安靜一點點，我就飛進夢裡了','嗯⋯是誰在認真讀書呢？','安靜的教室，是我最喜歡的床','Zzz⋯小小聲的大家最可愛','我夢到全班都拿到星星貼紙','有你們在，好安心喔','翻書的聲音像搖籃曲','偷偷告訴你：安靜的人最帥氣','呼～今天的夢是彩虹色的','我的耳朵在休息，謝謝你們','再一分鐘，我們一起破紀錄！','噓～夢裡的星星也在睡覺','好溫柔的安靜，像棉花糖','我在夢裡幫大家加油喔','輕輕的，像羽毛一樣','你們專心的樣子，閃閃發亮','睡飽飽，等一下陪你們玩','安靜是送給我最好的禮物','夢到在雲上散步⋯','大家好有默契喔','{s}{s}⋯好幸福','讀書的聲音最好聽了','我們是最安靜的一班！','晚安⋯不對，是午安～'],
+help:`<h2 id="hTitle">胡臺寧靜時光　使用說明</h2>
+<div class="hcols"><section><h3>1. 這是什麼</h3><p>投影在教室或圖書館的大螢幕上。<b>越安靜，小動物睡得越熟</b>；太吵，牠就會被吵醒。用可愛的方式取代老師一直喊「安靜」。</p></section>
+<section><h3>2. 兩種模式</h3><ul><li><b>時鐘版</b>：平常掛著當時鐘，同時累計今天的安靜時間、吵醒次數。</li><li><b>挑戰版</b>：選 5–60 分鐘（或自訂），按「開始挑戰」倒數。結束時出示「午睡品質」報告，可替全班加分。</li></ul></section>
+<section><h3>3. 動畫規則（三段式）</h3><table><tr><th>聲音</th><th>小動物</th><th>連續安靜</th></tr><tr><td>低於虛線（提醒線）</td><td>慢慢入睡，輕輕搖晃；每 30 秒淡出淡入換睡姿，偶爾說夢話</td><td>累積</td></tr><tr><td>音量碰到虛線（提醒線）</td><td>立刻皺眉、冒出 💢 提醒</td><td>不中斷</td></tr><tr><td>虛線以上累計 3 秒（斷斷續續也會累加）</td><td>被吵醒</td><td>歸零</td></tr><tr><td>音量碰到實線（門檻）</td><td>立刻被吵醒</td><td>歸零</td></tr></table><p class="muted">安靜下來後重新入睡，連續安靜從 0 再累積；「最長」紀錄會保留。安靜時，累計的秒數會慢慢消退。</p></section>
+<section><h3>4. 連續安靜</h3><p>角色旁的大數字是「目前連續安靜多久」，每滿 1 分鐘會亮一下。下方顯示今天最長紀錄與上次被吵醒的時間，鼓勵孩子挑戰更久。</p></section>
+<section><h3>5. 角色、場景與語言</h3><ul><li>右上「角色」：小橘（貓）、胡小呱（青蛙）。</li><li>右上「風格」：換場景背景。</li><li>右上「中／EN／VI」：切換中文、英文、越南文，方便外師使用。</li><li>「午休調暗」降低亮度；「全螢幕」投影用。電腦會記住你的選擇。</li></ul></section>
+<section><h3>6. 只聽「多大聲」，不錄音</h3><p>麥克風每秒檢查約 60 次音量，算完立刻丟掉。<b>不錄音、不存檔、不上傳</b>，也聽不出說話內容。</p><table><tr><th>數值</th><th>大約情境</th></tr><tr><td>0–30</td><td>安靜自習、翻書聲</td></tr><tr><td>30–55</td><td>零星小聲說話</td></tr><tr><td>55–80</td><td>正常討論、走動</td></tr><tr><td>80 以上</td><td>大聲喧嘩</td></tr></table><p class="muted">這不是分貝計：電腦、麥克風位置不同，數值就不同，所以每間教室要先「試音」。</p></section>
+<section><h3>7. 試音與門檻</h3><ul><li>按「試音」，請全班安靜 10 秒，系統自動設定門檻（實線），提醒線（虛線）固定在門檻下 10。</li><li>午休想更嚴格，把門檻往左拉；討論課往右拉。</li></ul></section>
+<section><h3>8. 擺放建議</h3><p>電腦或麥克風放在教室前方中間，別緊貼老師講話的位置。第一次使用瀏覽器會詢問麥克風權限，請按「允許」。</p></section></div>`},
+en:{langName:'EN',skinBtn:'Scene',sk_shelf:'Library Shelf',sk_night:'Moonlit Night',sk_chalk:'Chalkboard',sk_minimal:'Minimal',sk_dream:'Cloud Dream',sk_camp:'Starry Campsite',sk_cave:'Firefly Cave',sk_jungle:'Secret Jungle',charBtn:'Character',ch_cat:'Xiao Ju (cat)',ch_frog:'Hu Xiao Gua (frog)',guide:'Guide',dim:'Dim',undim:'Brighten',fs:'Fullscreen',
+school:'Taipei School in Ho Chi Minh City · Library & Information Center',title:'Hu-Tai Quiet Time',emblem:'School emblem',modeClock:'Clock',modeChal:'Challenge',cQuiet:'Quiet today',cWakes:'Wake-ups today',cRatio:'Quiet ratio',
+chalMin:'Challenge length (minutes)',other:'Other',minPh:'min',minUnit:'min',start:'Start challenge',remain:'Time left',napRemain:'Nap time left',pause:'Pause',resume:'Resume',paused:'Paused',endEarly:'Finish now',cancel:'Cancel',
+vol:'Class volume',cal:'Calibrate',calTitle:'Class stays quiet for 10 s to set the threshold automatically',calIng:'Calibrating',calAsk:'Everyone, please stay quiet for 10 seconds…',calDone:'Quiet baseline {b}; threshold set to {t}.',helpQ:'How volume sensing works',micOpen:'Turn on mic',micOn:'Mic is on',micRetry:'Retry mic',th:'Threshold',demo:'Demo volume',
+streak:'Quiet streak',best:'Best {x}',noWake:'No wake-ups yet today',lastWake:'Last woke {hm} · {ago}',justNow:'just now',minsAgo:'{n} min ago',plus1:'+1 minute!',
+st_wake:'Awake!',st_light:'Dozing',st_mid:'Asleep',st_deep:'Deep sleep',st_fuss:'Frowning',
+msg_wakeLong:'Too noisy for too long — {n} woke up!',msg_wake:'{n} woke up!',msg_fuss:'{n} is frowning… a little quieter, please',msg_deep:'{n} is fast asleep…',msg_mid:'{n} is asleep',msg_light:'{n} is getting sleepy…',msg_nomic:'Press “Turn on mic” to start',chalKeep:'Stay quiet and help {n} fall asleep',
+r_good:'Slept so well — ready for the afternoon!',r_ok:'Fell asleep, but woke up a few times.',r_bad:'Not a good nap today. Let’s be quieter next time.',r_titleNap:'{n}’s nap report',r_title:'How did {n} sleep?',r_quiet:'Quiet ratio',r_wakes:'Wake-ups',r_deep:'Deepest sleep',r_streak:'Longest quiet streak',r_curve:'Sleep curve',lg_wake:'Woke up',
+addPt:'+1 point for the class',noPt:'Close without points',scorePre:'Today:',scorePost:'pts',curveStart:'Start',curveMin:'{m} min',close:'Got it',
+names:{cat:'Xiao Ju',frog:'Hu Xiao Gua'},cries:{cat:'Meow! Too loud!',frog:'Ribbit! Too loud!'},snore:{cat:'Purr',frog:'Ribbit'},
+date:d=>d.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'}),
+lines:['{s}… so quiet, so cozy~','Thank you, everyone. I’m sleeping so well','Shh… I’m dreaming of a whole library','You’re amazing. I’m almost asleep…','It’s so quiet — can I nap a little longer?','I see lots of good books in my dream','A tiny bit quieter and I’ll float into dreamland','Mmm… who’s reading so hard?','A quiet classroom is my favorite bed','Zzz… soft voices, lovely friends','I dreamed the whole class got star stickers','I feel so safe with you here','The sound of turning pages is like a lullaby','Psst: quiet people are the coolest','Phew~ today’s dream is rainbow-colored','My ears are resting. Thank you!','One more minute — let’s break the record!','Shh~ even the stars in my dream are asleep','Such gentle quiet, like cotton candy','I’m cheering for you in my dream','Soft and light, like a feather','You shine when you focus','After my nap, I’ll play with you','Quiet is the best gift for me','Dreaming of walking on clouds…','We make a great team!','{s}, {s}… so happy','Reading sounds are the nicest sounds','We’re the quietest class ever!','Good night… oops, good afternoon~'],
+help:`<h2 id="hTitle">Hu-Tai Quiet Time · Guide</h2>
+<div class="hcols"><section><h3>1. What is it?</h3><p>Show it on the classroom or library screen. <b>The quieter the room, the deeper the little animal sleeps</b>; if it gets too loud, it wakes up. A gentle way to keep the room quiet without the teacher saying “shh” all the time.</p></section>
+<section><h3>2. Two modes</h3><ul><li><b>Clock</b>: a classroom clock that also counts today’s quiet time and wake-ups.</li><li><b>Challenge</b>: pick 5–60 minutes (or your own), press “Start challenge” to count down. At the end a nap report appears, and you can give the class a point.</li></ul></section>
+<section><h3>3. Animation rules (three levels)</h3><table><tr><th>Sound</th><th>Animal</th><th>Quiet streak</th></tr><tr><td>Below the dashed reminder line</td><td>Falls asleep and sways gently; changes pose with a fade every 30 s and sometimes talks in its sleep</td><td>Keeps counting</td></tr><tr><td>Volume reaches the dashed line</td><td>Frowns right away and shows 💢</td><td>Not broken</td></tr><tr><td>3 s above the dashed line in total (bursts add up)</td><td>Wakes up</td><td>Resets to 0</td></tr><tr><td>Volume reaches the solid line (threshold)</td><td>Wakes up instantly</td><td>Resets to 0</td></tr></table><p class="muted">Once it is quiet again, the animal goes back to sleep and the streak starts from 0. The “Best” record is kept. When the room is quiet, the counted seconds slowly drain away.</p></section>
+<section><h3>4. Quiet streak</h3><p>The big number next to the animal shows how long the class has been quiet without a break. It lights up every full minute. Below it you can see today’s best and the last time the animal woke up.</p></section>
+<section><h3>5. Characters, scenes and language</h3><ul><li>“Character”: Xiao Ju (cat) or Hu Xiao Gua (frog).</li><li>“Scene”: change the background.</li><li>“中 / EN / VI”: switch between Chinese, English and Vietnamese.</li><li>“Dim” lowers brightness for nap time; “Fullscreen” is for projecting. The computer remembers your choices.</li></ul></section>
+<section><h3>6. It only measures loudness — no recording</h3><p>The microphone checks the volume about 60 times a second and throws the number away right after. <b>Nothing is recorded, saved or uploaded</b>, and it cannot understand speech.</p><table><tr><th>Value</th><th>Roughly</th></tr><tr><td>0–30</td><td>Silent reading, turning pages</td></tr><tr><td>30–55</td><td>A few whispers</td></tr><tr><td>55–80</td><td>Normal discussion, walking around</td></tr><tr><td>80+</td><td>Loud talking</td></tr></table><p class="muted">These are not decibels: values change with the computer and microphone position, so calibrate in each room.</p></section>
+<section><h3>7. Calibrate and threshold</h3><ul><li>Press “Calibrate” and ask the class to stay quiet for 10 seconds. The threshold (solid line) is set automatically; the reminder line (dashed) is always 10 below it.</li><li>For a stricter nap time, drag the threshold left; for group work, drag it right.</li></ul></section>
+<section><h3>8. Placement tips</h3><p>Put the computer or microphone at the front centre of the room, not right next to where the teacher speaks. The first time, the browser asks for microphone permission — choose “Allow”.</p></section></div>`},
+vi:{langName:'VI',skinBtn:'Cảnh',sk_shelf:'Kệ sách thư viện',sk_night:'Đêm trăng',sk_chalk:'Bảng phấn',sk_minimal:'Tối giản',sk_dream:'Giấc mơ mây',sk_camp:'Cắm trại đêm sao',sk_cave:'Hang đom đóm',sk_jungle:'Rừng bí ẩn',charBtn:'Nhân vật',ch_cat:'Xiao Ju (mèo)',ch_frog:'Hu Xiao Gua (ếch)',guide:'Hướng dẫn',dim:'Giảm sáng',undim:'Sáng lại',fs:'Toàn màn hình',
+school:'Trường Đài Bắc TP. Hồ Chí Minh · Trung tâm Thư viện & Thông tin',title:'Giờ Yên Lặng Hồ-Đài',emblem:'Huy hiệu trường',modeClock:'Đồng hồ',modeChal:'Thử thách',cQuiet:'Yên lặng hôm nay',cWakes:'Số lần bị đánh thức',cRatio:'Tỉ lệ yên lặng',
+chalMin:'Thời gian thử thách (phút)',other:'Khác',minPh:'phút',minUnit:'phút',start:'Bắt đầu thử thách',remain:'Thời gian còn lại',napRemain:'Giờ nghỉ trưa còn',pause:'Tạm dừng',resume:'Tiếp tục',paused:'Đã tạm dừng',endEarly:'Kết thúc sớm',cancel:'Hủy',
+vol:'Âm lượng lớp',cal:'Đo nền',calTitle:'Cả lớp im lặng 10 giây để tự đặt ngưỡng',calIng:'Đang đo',calAsk:'Cả lớp giữ im lặng 10 giây nhé…',calDone:'Nền yên lặng {b}, ngưỡng được đặt là {t}.',helpQ:'Cách đo âm lượng',micOpen:'Bật micro',micOn:'Micro đã bật',micRetry:'Thử lại micro',th:'Ngưỡng',demo:'Âm lượng mẫu',
+streak:'Chuỗi yên lặng',best:'Dài nhất {x}',noWake:'Hôm nay chưa bị đánh thức',lastWake:'Bị đánh thức lúc {hm} · {ago}',justNow:'vừa xong',minsAgo:'{n} phút trước',plus1:'+1 phút!',
+st_wake:'Thức giấc!',st_light:'Lơ mơ',st_mid:'Ngủ say',st_deep:'Ngủ rất say',st_fuss:'Nhăn mặt',
+msg_wakeLong:'Ồn quá lâu, {n} bị đánh thức rồi!',msg_wake:'{n} bị đánh thức rồi!',msg_fuss:'{n} đang nhăn mặt, nhỏ tiếng chút nhé…',msg_deep:'{n} ngủ say quá…',msg_mid:'{n} đã ngủ',msg_light:'{n} buồn ngủ rồi…',msg_nomic:'Nhấn “Bật micro” để bắt đầu',chalKeep:'Giữ yên lặng để {n} ngủ nhé',
+r_good:'Ngủ thật ngon, chiều nay tràn đầy năng lượng!',r_ok:'Có ngủ được, nhưng bị đánh thức vài lần.',r_bad:'Hôm nay ngủ chưa ngon, lần sau yên lặng hơn nhé.',r_titleNap:'Giấc trưa của {n} hôm nay',r_title:'{n} ngủ thế nào?',r_quiet:'Tỉ lệ yên lặng',r_wakes:'Số lần thức',r_deep:'Ngủ sâu nhất',r_streak:'Chuỗi yên lặng dài nhất',r_curve:'Biểu đồ giấc ngủ',lg_wake:'Bị đánh thức',
+addPt:'Cộng 1 điểm cho lớp',noPt:'Đóng, không cộng điểm',scorePre:'Hôm nay:',scorePost:'điểm',curveStart:'Bắt đầu',curveMin:'{m} phút',close:'Đã hiểu',
+names:{cat:'Xiao Ju',frog:'Hu Xiao Gua'},cries:{cat:'Meo! Ồn quá!',frog:'Ộp! Ồn quá!'},snore:{cat:'Rừ rừ',frog:'Ộp ộp'},
+date:d=>{const s=d.toLocaleDateString('vi-VN',{weekday:'long',day:'numeric',month:'long'});return s.charAt(0).toUpperCase()+s.slice(1)},
+lines:['{s}… yên tĩnh quá, dễ chịu quá~','Cảm ơn cả lớp, mình ngủ ngon lắm','Suỵt… mình mơ thấy cả một thư viện','Các bạn giỏi quá, mình sắp ngủ rồi…','Yên tĩnh thế này, cho mình ngủ thêm chút nhé?','Trong mơ có thật nhiều sách hay','Yên lặng thêm chút nữa là mình bay vào giấc mơ','Ừm… ai đang chăm chỉ đọc sách thế?','Lớp học yên tĩnh là chiếc giường mình thích nhất','Zzz… nói khẽ thôi, các bạn đáng yêu ghê','Mình mơ cả lớp đều được nhãn dán ngôi sao','Có các bạn ở đây, mình thấy thật an tâm','Tiếng lật sách nghe như bài hát ru','Nói nhỏ nè: người giữ yên lặng ngầu nhất','Hôm nay mình mơ giấc mơ bảy sắc cầu vồng','Tai mình đang được nghỉ ngơi, cảm ơn nhé','Thêm một phút nữa, cùng phá kỷ lục nào!','Suỵt~ ngôi sao trong mơ cũng đang ngủ','Yên lặng dịu dàng như kẹo bông gòn','Trong mơ mình đang cổ vũ các bạn đó','Nhẹ nhàng như một chiếc lông vũ','Lúc các bạn tập trung trông thật lấp lánh','Ngủ đủ rồi mình sẽ chơi với các bạn','Yên lặng là món quà tuyệt nhất cho mình','Mơ thấy mình đi dạo trên mây…','Cả lớp ăn ý quá đi','{s}… hạnh phúc ghê','Tiếng đọc sách là âm thanh hay nhất','Lớp mình là lớp yên lặng nhất!','Chúc ngủ ngon… à không, chào buổi chiều~'],
+help:`<h2 id="hTitle">Giờ Yên Lặng Hồ-Đài · Hướng dẫn</h2>
+<div class="hcols"><section><h3>1. Đây là gì?</h3><p>Chiếu lên màn hình lớn của lớp học hoặc thư viện. <b>Lớp càng yên lặng, bạn thú nhỏ ngủ càng say</b>; ồn quá thì bạn ấy sẽ thức giấc. Một cách dễ thương để giữ trật tự mà giáo viên không phải nhắc “im lặng” liên tục.</p></section>
+<section><h3>2. Hai chế độ</h3><ul><li><b>Đồng hồ</b>: làm đồng hồ lớp học, đồng thời đếm thời gian yên lặng và số lần bị đánh thức trong ngày.</li><li><b>Thử thách</b>: chọn 5–60 phút (hoặc tự nhập), nhấn “Bắt đầu thử thách” để đếm ngược. Kết thúc sẽ có báo cáo giấc ngủ, có thể cộng điểm cho cả lớp.</li></ul></section>
+<section><h3>3. Quy tắc hoạt hình (ba mức)</h3><table><tr><th>Âm thanh</th><th>Thú nhỏ</th><th>Chuỗi yên lặng</th></tr><tr><td>Dưới vạch nhắc (nét đứt)</td><td>Ngủ dần, đung đưa nhẹ; mỗi 30 giây mờ dần đổi tư thế, thỉnh thoảng nói mớ</td><td>Tiếp tục đếm</td></tr><tr><td>Âm lượng chạm vạch nhắc (nét đứt)</td><td>Nhăn mặt ngay, hiện 💢</td><td>Không bị ngắt</td></tr><tr><td>Trên vạch nhắc tổng cộng 3 giây (ngắt quãng vẫn cộng dồn)</td><td>Thức giấc</td><td>Về 0</td></tr><tr><td>Âm lượng chạm ngưỡng (nét liền)</td><td>Thức giấc ngay</td><td>Về 0</td></tr></table><p class="muted">Khi lớp yên lặng trở lại, thú nhỏ ngủ lại và chuỗi yên lặng đếm lại từ 0; kỷ lục “Dài nhất” vẫn được giữ. Khi lớp yên lặng, số giây đã cộng sẽ giảm dần.</p></section>
+<section><h3>4. Chuỗi yên lặng</h3><p>Con số lớn bên cạnh thú nhỏ là thời gian cả lớp yên lặng liên tục, sáng lên mỗi khi tròn 1 phút. Bên dưới là kỷ lục hôm nay và lần bị đánh thức gần nhất.</p></section>
+<section><h3>5. Nhân vật, cảnh và ngôn ngữ</h3><ul><li>“Nhân vật”: Xiao Ju (mèo) hoặc Hu Xiao Gua (ếch).</li><li>“Cảnh”: đổi hình nền.</li><li>“中 / EN / VI”: chuyển tiếng Trung, tiếng Anh, tiếng Việt.</li><li>“Giảm sáng” cho giờ nghỉ trưa; “Toàn màn hình” để chiếu. Máy tính sẽ nhớ lựa chọn của bạn.</li></ul></section>
+<section><h3>6. Chỉ đo độ ồn, không ghi âm</h3><p>Micro kiểm tra âm lượng khoảng 60 lần mỗi giây và xóa ngay sau khi tính. <b>Không ghi âm, không lưu, không tải lên</b>, cũng không nghe được nội dung lời nói.</p><table><tr><th>Giá trị</th><th>Tình huống</th></tr><tr><td>0–30</td><td>Tự học yên lặng, lật sách</td></tr><tr><td>30–55</td><td>Vài tiếng thì thầm</td></tr><tr><td>55–80</td><td>Thảo luận bình thường, đi lại</td></tr><tr><td>Trên 80</td><td>Nói chuyện lớn tiếng</td></tr></table><p class="muted">Đây không phải đơn vị decibel: giá trị thay đổi theo máy tính và vị trí micro, nên mỗi lớp cần “Đo nền” trước.</p></section>
+<section><h3>7. Đo nền và ngưỡng</h3><ul><li>Nhấn “Đo nền”, cả lớp im lặng 10 giây; hệ thống tự đặt ngưỡng (nét liền), vạch nhắc (nét đứt) luôn thấp hơn ngưỡng 10.</li><li>Giờ nghỉ trưa muốn nghiêm hơn thì kéo ngưỡng sang trái; giờ thảo luận thì kéo sang phải.</li></ul></section>
+<section><h3>8. Gợi ý đặt máy</h3><p>Đặt máy tính hoặc micro ở giữa phía trước lớp, không sát chỗ giáo viên nói. Lần đầu trình duyệt sẽ hỏi quyền dùng micro, hãy chọn “Cho phép”.</p></section></div>`}
+};
+
+let LANG='zh'; try{LANG=localStorage.getItem('xj_lang')||'zh'}catch(e){} if(!I18N[LANG])LANG='zh';
+let L=I18N[LANG];
+const T=(k,p)=>{let x=L[k]; if(x==null) x=I18N.zh[k]; if(p) for(const q in p) x=x.split('{'+q+'}').join(p[q]); return x};
+
+const CHARS={
+  cat:{name:'小橘',file:'xj',cry:'喵！好吵！',pool:{wake:[1,2,3,4,5,6],light:[7,8,9,10,11,12,13,14],mid:[15,16,17,18,19,20,21,22,23],deep:[24,25,26,27,28,29,30]},pad:null},
+  frog:{name:'胡小呱',file:'frog',cry:'呱！好吵！',pool:{wake:[1,2,3,4,5,6],light:[7,8,9,10,11,12,13,14],mid:[15,16,17,18,19,20,21,22,23],deep:[24,25,26,27,28,29,30]},pad:{"1":0.146,"2":0.139,"3":0.141,"4":0.138,"5":0.126,"6":0.178,"7":0.129,"8":0.174,"9":0.166,"10":0.161,"11":0.294,"12":0.159,"13":0.162,"14":0.136,"15":0.213,"16":0.213,"17":0.091,"18":0.228,"19":0.136,"20":0.236,"21":0.089,"22":0.047,"23":0.226,"24":0.123,"25":0.29,"26":0.176,"27":0.131,"28":0.331,"29":0.294,"30":0.133}}
+};
+let CK='cat'; try{CK=localStorage.getItem('xj_char')||'cat'}catch(e){} if(!CHARS[CK])CK='cat';
+let C=CHARS[CK], POOL=C.pool;
+const NAME=new Proxy({},{get:(o,k)=>T('st_'+k)});
+const NM=()=>L.names[CK];
+const DOT={wake:'#d0533f',light:'#9fbf7a',mid:'#5f8a3f',deep:'#3b5a26'};
+const src=n=>`img/${C.file}${String(n).padStart(2,'0')}.webp`;
+const preload=()=>Object.values(POOL).flat().forEach(n=>{const i=new Image();i.src=src(n)});
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+
+let cryUntil=0, fussFor=0, calmGap=0, fussUntil=0, fussing=false, wakeCause='', streak=0, bestStreak=0, lastWakeAt=null, streakMin=0, chBest=0, wakePoseAt=0, loudFor=0, mode='clock', sleep=55, vol=0, analyser=null, buf=null, usingFake=false, lastWake=-1e9, stage='mid', shown=15, stageSince=0, wakeShowUntil=0;
+const th=$('th');
+const REMIND_GAP=10, FUSS_HOLD=2000, FUSS_LIMIT=3, FUSS_LEAK=0.15, QUIET_ROTATE=30000;
+const remindOf=()=>Math.max(5,+th.value-REMIND_GAP);
+function drawTh(){$('thVal').textContent=th.value;$('thMark').style.left=th.value+'%';$('rmMark').style.left=remindOf()+'%'}
+th.addEventListener('input',drawTh);drawTh();
+
+/* image swapping with crossfade; PAD = transparent margin under each pose, so every pose sits on the ledge */
+const CAT_PAD={"1":0.058,"2":0.051,"3":0.045,"4":0.052,"5":0.046,"6":0.061,"7":0.06,"8":0.059,"9":0.114,"10":0.168,"11":0.168,"12":0.051,"13":0.2,"14":0.062,"15":0.148,"16":0.201,"17":0.092,"18":0.213,"19":0.158,"20":0.149,"21":0.269,"22":0.158,"23":0.068,"24":0.094,"25":0.165,"26":0.212,"27":0.049,"28":0.066,"29":0.049,"30":0.174};
+CHARS.cat.pad=CAT_PAD; let PAD=C.pad;
+let front='catA';
+['catA','catB'].forEach(id=>{const el=$(id);const fix=()=>{const m=el.src.match(/(xj|frog)(\d+)\./);if(m)el.style.setProperty('--pad',(m[1]==='xj'?CAT_PAD:CHARS.frog.pad)[+m[2]]||0)};el.addEventListener('load',fix);fix();});
+function show(n,alt){
+  if(n===shown) return; shown=n;
+  const back=front==='catA'?'catB':'catA';
+  const b=$(back), f=$(front);
+  b.src=src(n); b.alt=alt; b.style.setProperty('--pad',PAD[n]||0); b.classList.remove('out'); f.classList.add('out'); f.alt=''; front=back;
+}
+function stageOf(s){return s>=70?'deep':s>=30?'mid':'light'}
+
+/* microphone */
+async function openMic(){
+  if(analyser) return true;
+  try{
+    const s=await navigator.mediaDevices.getUserMedia({audio:{echoCancellation:false,noiseSuppression:false,autoGainControl:false}});
+    const ctx=new (window.AudioContext||window.webkitAudioContext)();
+    audioCtx=ctx; if(ctx.state==='suspended'){try{await ctx.resume()}catch(e){}}
+    const node=ctx.createMediaStreamSource(s); analyser=ctx.createAnalyser(); analyser.fftSize=1024; buf=new Float32Array(analyser.fftSize); node.connect(analyser);
+    usingFake=false; $('demo').hidden=true; micState='on'; $('micBtn').textContent=T('micOn'); $('micBtn').disabled=true; return true;
+  }catch(e){
+    usingFake=true; $('demo').hidden=false; micState='retry'; $('micBtn').textContent=T('micRetry'); return false;
+  }
+}
+$('micBtn').addEventListener('click',openMic);
+/* iOS/Safari: wake the audio engine on the first tap anywhere */
+let audioCtx=null;
+['touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,()=>{try{if(audioCtx&&audioCtx.state!=='running')audioCtx.resume()}catch(e){} if(!analyser&&!usingFake) openMic();},{passive:true}));
+/* help modal */
+const helpEl=$('help');
+const openHelp=()=>{helpEl.hidden=false;helpEl.querySelector('.sheet').scrollTop=0;$('helpClose').focus({preventScroll:true})};
+$('helpBtn').onclick=openHelp;
+$('guideBtn').onclick=openHelp;
+$('helpClose').onclick=()=>{helpEl.hidden=true;$('helpBtn').focus()};
+helpEl.addEventListener('click',e=>{if(e.target===helpEl){helpEl.hidden=true}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!helpEl.hidden){helpEl.hidden=true;$('helpBtn').focus()}});
+/* calibration: 10 s of quiet -> threshold = 90th percentile + 18 */
+let cal=null;
+$('calBtn').onclick=async()=>{
+  if(cal) return;
+  if(!analyser&&!usingFake) await openMic();
+  cal={until:performance.now()+10000,samples:[]};
+  $('calBtn').classList.add('busy'); $('calMsg').textContent=T('calAsk');
+};
+function calTick(now){
+  if(!cal) return false;
+  cal.samples.push(vol);
+  const left=Math.ceil((cal.until-now)/1000);
+  $('calBtn').textContent=left>0?T('calIng')+' '+left:T('cal');
+  if(now>=cal.until){
+    const a=cal.samples.slice().sort((x,y)=>x-y), p90=a[Math.floor(a.length*.9)]||0;
+    const t=Math.round(Math.max(20,Math.min(90,p90+18)));
+    th.value=t; drawTh();
+    $('calMsg').textContent=T('calDone',{b:Math.round(p90),t});
+    $('calBtn').classList.remove('busy'); $('calBtn').textContent=T('cal'); cal=null;
+    setTimeout(()=>{if(!cal)$('calMsg').textContent=''},12000);
+  }
+  return true;
+}
+let readVol=function(){
+  if(!analyser) return usingFake?+$('fake').value:0;
+  analyser.getFloatTimeDomainData(buf); let s=0; for(let i=0;i<buf.length;i++) s+=buf[i]*buf[i];
+  const db=20*Math.log10(Math.sqrt(s/buf.length)+1e-8); return Math.max(0,Math.min(100,(db+75)*1.6));
+}
+
+/* stats */
+const today={day:new Date().toDateString(),quiet:0,total:0,wakes:0};
+let ch=null; // challenge run
+let score=0;
+
+/* modes */
+function setMode(m){
+  mode=m; $('mClock').setAttribute('aria-pressed',m==='clock'); $('mChal').setAttribute('aria-pressed',m==='chal');
+  $('clockPane').hidden=m!=='clock'; $('chalPane').hidden=m!=='chal';
+}
+$('mClock').onclick=()=>{ if(ch&&ch.running) return; setMode('clock') };
+$('mChal').onclick=()=>setMode('chal');
+
+/* challenge setup */
+let minutes=5;
+const fmt=s=>{s=Math.max(0,Math.ceil(s));return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')};
+function setMin(m){minutes=m;$('setTime').textContent=fmt(m*60)}
+$('chips').addEventListener('click',e=>{const b=e.target.closest('.chip');if(!b)return;document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed',c===b));$('customMin').value='';setMin(+b.dataset.m)});
+$('customMin').addEventListener('input',e=>{let v=Math.round(+e.target.value);if(!v)return;v=Math.min(180,Math.max(1,v));document.querySelectorAll('.chip').forEach(c=>c.setAttribute('aria-pressed','false'));setMin(v)});
+
+let wl=null;
+$('startBtn').onclick=async()=>{
+  await openMic();
+  chBest=0; streak=0; streakMin=0; ch={running:true,paused:false,total:minutes*60,left:minutes*60,quiet:0,elapsed:0,wakes:0,deep:'light',trace:[],lastSample:0};
+  sleep=0; lastWake=-1e9;
+  $('setup').hidden=true; $('running').hidden=false; $('mClock').disabled=true;
+  $('runLabel').textContent=minutes>=30?T('napRemain'):T('remain'); $('pauseBtn').textContent=T('pause');
+  try{wl=await navigator.wakeLock?.request('screen')}catch(e){}
+};
+$('pauseBtn').onclick=()=>{if(!ch)return;ch.paused=!ch.paused;$('pauseBtn').textContent=ch.paused?T('resume'):T('pause');$('chalStatus').textContent=ch.paused?T('paused'):T('chalKeep',{n:NM()})};
+$('cancelBtn').onclick=()=>endRun(false);
+$('endBtn').onclick=()=>endRun(true);
+function endRun(report){
+  if(!ch) return; ch.running=false; $('setup').hidden=false; $('running').hidden=true; $('mClock').disabled=false;
+  try{wl&&wl.release()}catch(e){}
+  if(report) showReport(ch);
+}
+
+/* report */
+function showReport(r){
+  const q=r.elapsed?Math.round(r.quiet/r.elapsed*100):0;
+  $('rQuiet').textContent=q+'%'; $('rWakes').textContent=r.wakes; $('rDeep').textContent=NAME[r.deep]; {const t=Math.floor(chBest);$('rStreak').textContent=Math.floor(t/60)+':'+String(t%60).padStart(2,'0')}
+  const good=r.deep==='deep'&&r.wakes<=2, ok=r.deep!=='light';
+  $('rSay').textContent=good?T('r_good'):ok?T('r_ok'):T('r_bad');
+  $('rImg').src=src(good?pick(POOL.deep):ok?pick(POOL.mid):pick([2,3,6]));
+  $('rTitle').textContent=r.total>=1800?T('r_titleNap',{n:NM()}):T('r_title',{n:NM()});
+  $('report').hidden=false; drawCurve(r);
+}
+function drawCurve(r){
+  const c=$('curve'),g=c.getContext('2d'),W=c.width,H=c.height,pad=36;const cs=getComputedStyle(document.body),tk=n=>cs.getPropertyValue(n).trim();
+  g.clearRect(0,0,W,H);
+  const y=v=>H-pad-(v/100)*(H-pad*2);
+  g.font='22px sans-serif'; g.fillStyle=tk('--soft');
+  [[30,T('st_light')],[70,T('st_mid')],[100,T('st_deep')]].forEach(([v,t])=>{g.strokeStyle=tk('--line');g.lineWidth=2;g.beginPath();g.moveTo(pad+40,y(v));g.lineTo(W-pad,y(v));g.stroke();g.fillText(t,0,y(v-15)+8)});
+  const tr=r.trace; if(tr.length<2) return;
+  const x=i=>pad+40+(i/(tr.length-1))*(W-pad*2-40);
+  g.beginPath(); g.moveTo(x(0),y(0)); tr.forEach((p,i)=>g.lineTo(x(i),y(p.s))); g.lineTo(x(tr.length-1),y(0)); g.closePath();
+  g.globalAlpha=.25; g.fillStyle=tk('--good'); g.fill(); g.globalAlpha=1;
+  g.beginPath(); tr.forEach((p,i)=>i?g.lineTo(x(i),y(p.s)):g.moveTo(x(i),y(p.s))); g.strokeStyle=tk('--good'); g.lineWidth=4; g.stroke();
+  g.fillStyle=tk('--bad'); tr.forEach((p,i)=>{if(p.w){g.beginPath();g.arc(x(i),y(p.s)-14,9,0,7);g.fill()}});
+  g.fillStyle=tk('--soft'); g.fillText(T('curveStart'),pad+40,H-6); const m=Math.round(r.elapsed/60); g.textAlign='right'; g.fillText(T('curveMin',{m}),W-pad,H-6); g.textAlign='left';
+}
+$('addPt').onclick=()=>{score++;$('score').textContent=score;$('report').hidden=true};
+$('noPt').onclick=()=>{$('report').hidden=true};
+
+/* skins */
+function setSkin(k){document.body.dataset.skin=k;document.querySelectorAll('#skinMenu [data-skin]').forEach(b=>b.setAttribute('aria-checked',b.dataset.skin===k));try{localStorage.setItem('xj_skin',k)}catch(e){}}
+let sk='shelf';try{sk=localStorage.getItem('xj_skin')||'shelf'}catch(e){} setSkin(sk);
+$('skinBtn').onclick=e=>{e.stopPropagation();const open=$('skinMenu').hidden;$('skinMenu').hidden=!open;$('charMenu').hidden=true;$('langMenu').hidden=true;$('skinBtn').setAttribute('aria-expanded',open)};
+$('skinMenu').addEventListener('click',e=>{const b=e.target.closest('[data-skin]');if(!b)return;setSkin(b.dataset.skin);$('skinMenu').hidden=true;$('skinBtn').setAttribute('aria-expanded','false')});
+document.addEventListener('click',e=>{if(!e.target.closest('.skinWrap')){$('skinMenu').hidden=true;$('skinBtn').setAttribute('aria-expanded','false')}});
+/* language */
+let micState='open', lastClock='';
+function applyLang(){
+  L=I18N[LANG]; document.documentElement.lang=LANG==='zh'?'zh-Hant':LANG;
+  document.querySelectorAll('[data-i18n]').forEach(e=>{e.textContent=T(e.dataset.i18n)});
+  document.querySelectorAll('[data-i18n-title]').forEach(e=>{e.title=T(e.dataset.i18nTitle)});
+  document.querySelectorAll('[data-i18n-aria]').forEach(e=>{e.setAttribute('aria-label',T(e.dataset.i18nAria))});
+  document.querySelectorAll('[data-i18n-ph]').forEach(e=>{e.placeholder=T(e.dataset.i18nPh)});
+  document.querySelectorAll('[data-i18n-alt]').forEach(e=>{e.alt=T(e.dataset.i18nAlt)});
+  $('helpBody').innerHTML=L.help;
+  $('micBtn').textContent=micState==='on'?T('micOn'):micState==='retry'?T('micRetry'):T('micOpen');
+  $('dimBtn').textContent=$('dimBtn').getAttribute('aria-pressed')==='true'?T('undim'):T('dim');
+  $('charBtn').textContent=T('charBtn')+(LANG==='zh'?'：':': ')+NM();
+  $('bubble').textContent=L.cries[CK]; $('catzone').setAttribute('aria-label',NM());
+  if(!(ch&&ch.running)) $('chalStatus').textContent=T('chalKeep',{n:NM()});
+  else { $('runLabel').textContent=ch.total>=1800?T('napRemain'):T('remain'); $('pauseBtn').textContent=ch.paused?T('resume'):T('pause'); }
+  $('langBtn').textContent='🌐 '+L.langName;
+  document.querySelectorAll('#langMenu [data-lang]').forEach(b=>b.setAttribute('aria-checked',b.dataset.lang===LANG));
+  document.title=T('title'); lastClock=''; if(sayIdx>=0) $('sayLine').textContent=sayText(sayIdx);
+}
+function setLang(k){LANG=k;try{localStorage.setItem('xj_lang',k)}catch(e){};applyLang()}
+$('langBtn').onclick=e=>{e.stopPropagation();const open=$('langMenu').hidden;$('langMenu').hidden=!open;$('langBtn').setAttribute('aria-expanded',open);$('skinMenu').hidden=true;$('charMenu').hidden=true};
+$('langMenu').addEventListener('click',e=>{const b=e.target.closest('[data-lang]');if(!b)return;setLang(b.dataset.lang);$('langMenu').hidden=true;$('langBtn').setAttribute('aria-expanded','false')});
+document.addEventListener('click',e=>{if(!e.target.closest('.skinWrap')){$('langMenu').hidden=true;$('langBtn').setAttribute('aria-expanded','false')}});
+/* sleep-talk lines: shown under the big state word while quiet, rotating every 15 s */
+let sayIdx=-1, sayAt=0, sayOn=false, quietSince=0;
+const sayText=i=>L.lines[i].split('{s}').join(L.snore[CK]);
+function sayTick(now,ok){
+  const el=$('sayLine');
+  if(!ok){ quietSince=0; if(sayOn){sayOn=false;el.classList.remove('on')} return }
+  if(!quietSince) quietSince=now;
+  if(now-quietSince<6000) return;
+  if(!sayOn||now-sayAt>15000){
+    let i; do{ i=Math.floor(Math.random()*L.lines.length) }while(i===sayIdx&&L.lines.length>1);
+    sayIdx=i; sayAt=now;
+    if(sayOn){ el.classList.remove('on'); setTimeout(()=>{el.textContent=sayText(sayIdx); el.classList.add('on')},800) }
+    else { el.textContent=sayText(sayIdx); el.classList.add('on') }
+    sayOn=true;
+  }
+}
+/* character */
+function setChar(k,init){
+  CK=k; C=CHARS[k]; POOL=C.pool; PAD=C.pad; preload();
+  document.querySelectorAll('#charMenu [data-char]').forEach(b=>b.setAttribute('aria-checked',b.dataset.char===k));
+  applyLang();
+  try{localStorage.setItem('xj_char',k)}catch(e){}
+  const n=stage==='wake'?pick(POOL.wake):pick(POOL[stage]||POOL.mid); shown=-1;
+  if(init){ ['catA','catB'].forEach(id=>{$(id).src=src(n)}); $('catA').alt=NM()+NAME[stage]; shown=n } else show(n,NM()+NAME[stage]);
+}
+$('charBtn').onclick=e=>{e.stopPropagation();const open=$('charMenu').hidden;$('charMenu').hidden=!open;$('charBtn').setAttribute('aria-expanded',open);$('skinMenu').hidden=true;$('langMenu').hidden=true};
+$('charMenu').addEventListener('click',e=>{const b=e.target.closest('[data-char]');if(!b)return;setChar(b.dataset.char);$('charMenu').hidden=true;$('charBtn').setAttribute('aria-expanded','false')});
+document.addEventListener('click',e=>{if(!e.target.closest('.skinWrap')){$('charMenu').hidden=true;$('charBtn').setAttribute('aria-expanded','false')}});
+setChar(CK,true);
+/* tools */
+$('fsBtn').onclick=async()=>{try{document.fullscreenElement?await document.exitFullscreen():await document.documentElement.requestFullscreen()}catch(e){}};
+$('dimBtn').onclick=()=>{const on=$('dimBtn').getAttribute('aria-pressed')!=='true';$('dimBtn').setAttribute('aria-pressed',on);$('dimBtn').textContent=on?T('undim'):T('dim');$('dim').style.opacity=on?.5:0};
+
+/* main loop */
+const WEEK='日一二三四五六';
+let last=performance.now();
+function tick(now){
+  const dt=Math.min(.25,(now-last)/1000); last=now;
+  const raw=readVol(); vol=vol*.6+raw*.4;
+  /* rules: touching the solid line = woken instantly; at/above the dashed line = frown, and 3 s of it (added up, even in bursts) = woken */
+  const peak=Math.max(raw,vol), loud=peak>=+th.value, warn=peak>=remindOf(), live=!!analyser||usingFake;
+  $('lvl').style.width=vol+'%'; $('lvl').classList.toggle('loud',loud); $('lvl').classList.toggle('warn',warn&&!loud);
+
+  const running=ch&&ch.running&&!ch.paused;
+  const calibrating=calTick(now);
+  const tracking=live&&!calibrating&&(mode==='clock'||running);
+  loudFor=loud?loudFor+dt:0;
+  /* small-noise meter: time above the dashed line adds up; quiet only drains it slowly, so on-off chatter still counts */
+  if(!tracking) fussFor=0; else if(warn) fussFor+=dt; else fussFor=Math.max(0,fussFor-dt*FUSS_LEAK);
+  const bigNoise=tracking&&loud, longFuss=fussFor>=FUSS_LIMIT;
+  const breakNow=tracking&&(bigNoise||longFuss);
+  if(longFuss) fussFor=0;
+  if(tracking&&!breakNow&&warn) fussUntil=now+FUSS_HOLD;
+  fussing=tracking&&!breakNow&&now<fussUntil;
+  let woke=false;
+  if(tracking){
+    if(breakNow){
+      wakeCause=bigNoise?'big':'long';
+      /* keep the grumpy pose on screen for as long as the noise lasts (+2.6 s after) */
+      const fresh=now>=wakeShowUntil;
+      wakeShowUntil=now+2600;
+      if(fresh&&sleep>15) woke=true; /* one wake per noisy episode */
+      if(fresh||now-wakePoseAt>5000){ show(pick(POOL.wake.filter(n=>n!==shown)),NM()+' '+T('st_wake')); wakePoseAt=now }
+      if(now-lastWake>3000){
+        lastWake=now; sleep=Math.min(sleep*.4,25);
+        cryUntil=now+1800;
+      }
+    }else if(!warn) sleep=Math.min(100,sleep+dt*.8); /* sleep gain pauses while fussing */
+  }
+  if(woke){ today.wakes++; if(running) ch.wakes++; }
+  /* continuous-quiet streak: breaks on a noisy episode (>=0.5 s), otherwise keeps counting */
+  if(tracking){
+    if(breakNow){
+      fussUntil=0;
+      if(streak>0){ lastWakeAt=new Date(); $('streak').classList.add('broken'); setTimeout(()=>$('streak').classList.remove('broken'),1500) }
+      streak=0; streakMin=0;
+    }else{
+      streak+=dt; if(streak>bestStreak) bestStreak=streak; if(running&&streak>chBest) chBest=streak;
+      const m=Math.floor(streak/60);
+      if(m>streakMin){ streakMin=m; const el=$('streak'); el.classList.remove('milestone'); void el.offsetWidth; el.classList.add('milestone'); setTimeout(()=>el.classList.remove('milestone'),1800) }
+    }
+  }
+  $('streak').classList.toggle('idle',!tracking);
+  /* today stats (clock) */
+  const d=new Date();
+  if(d.toDateString()!==today.day){today.day=d.toDateString();today.quiet=0;today.total=0;today.wakes=0;bestStreak=0;lastWakeAt=null}
+  if(live&&mode==='clock'){today.total+=dt; if(!loud) today.quiet+=dt}
+  /* challenge */
+  if(running){
+    ch.left-=dt; ch.elapsed+=dt; if(!loud) ch.quiet+=dt;
+    const st=stageOf(sleep); if((st==='deep')||(st==='mid'&&ch.deep==='light')) ch.deep=st;
+    if(ch.elapsed-ch.lastSample>=Math.max(1,ch.total/240)||woke){ch.trace.push({s:sleep,w:woke});ch.lastSample=ch.elapsed}
+    $('countdown').textContent=fmt(ch.left);
+    if(ch.left<=0) endRun(true);
+  }
+  /* cat */
+  const waking=now<wakeShowUntil;
+  const st=waking?'wake':stageOf(sleep);
+  if(!waking&&(st!==stage||now-stageSince>QUIET_ROTATE)){ const same=st===stage; stage=st; stageSince=now; show(pick(same?POOL[st].filter(n=>n!==shown):POOL[st]),NM()+' '+NAME[st]) }
+  if(waking) stage='wake';
+  const fz=fussing&&stage!=='wake';
+  $('pillText').textContent=stage==='wake'&&now<cryUntil?L.cries[CK]:fz?T('st_fuss'):NAME[stage];
+  sayTick(now,live&&!fz&&stage!=='wake');
+  document.body.dataset.stage=stage; document.body.dataset.fuss=fz?'1':'0';
+  const P={n:NM()}, msg=stage==='wake'?(wakeCause==='long'?T('msg_wakeLong',P):T('msg_wake',P)):fz?T('msg_fuss',P):stage==='deep'?T('msg_deep',P):stage==='mid'?T('msg_mid',P):T('msg_light',P);
+  $('clockStatus').textContent=live?msg:T('msg_nomic');
+  if(running) $('chalStatus').textContent=msg;
+  /* clock text */
+  const hh=String(d.getHours()).padStart(2,'0'),mm=String(d.getMinutes()).padStart(2,'0'),ss=String(d.getSeconds()).padStart(2,'0');
+  const key=hh+mm+ss;
+  if(key!==lastClock){lastClock=key;
+    $('clockTime').innerHTML=hh+':'+mm+'<span>:'+ss+'</span>';
+    $('clockDate').textContent=L.date(d);
+    const qm=Math.floor(today.quiet/60); $('cQuiet').textContent=Math.floor(qm/60)+':'+String(qm%60).padStart(2,'0');
+    const mmss=t=>{t=Math.floor(t);const h=Math.floor(t/3600),m=Math.floor(t%3600/60),x=String(t%60).padStart(2,'0');return h?h+':'+String(m).padStart(2,'0')+':'+x:m+':'+x};
+    $('streakTime').textContent=mmss(streak); $('streakBest').textContent=T('best',{x:mmss(bestStreak)});
+    if(lastWakeAt){const ago=Math.floor((d-lastWakeAt)/60000);$('lastWake').textContent=T('lastWake',{hm:String(lastWakeAt.getHours()).padStart(2,'0')+':'+String(lastWakeAt.getMinutes()).padStart(2,'0'),ago:ago<1?T('justNow'):T('minsAgo',{n:ago})})} else $('lastWake').textContent=T('noWake');
+    $('cWakes').textContent=today.wakes; $('cRatio').textContent=today.total>30?Math.round(today.quiet/today.total*100)+'%':'—';
+  }
+  requestAnimationFrame(tick);
+}
+if(window.XJ_TEST||/[?&#]test/.test(location.href)){
+  const tb=document.createElement('div');tb.className='testbar';
+  tb.innerHTML='<label><input type="checkbox" id="tSim"> 用滑桿模擬音量</label><input type="range" id="tVol" min="0" max="100" value="15" disabled><span>音量 <b id="tV">0</b>｜提醒線 <b id="tR">0</b>｜門檻 <b id="tT">0</b>｜皺眉 <b id="tF">0.0</b>s/3s</span>';
+  document.body.appendChild(tb);
+  const realRead=readVol;
+  readVol=()=>$('tSim').checked?+$('tVol').value:realRead();
+  $('tSim').onchange=e=>{$('tVol').disabled=!e.target.checked; if(e.target.checked&&!analyser){usingFake=true}};
+  setInterval(()=>{$('tV').textContent=Math.round(vol);$('tR').textContent=remindOf();$('tT').textContent=th.value;$('tF').textContent=fussFor.toFixed(1)},200);
+}
+requestAnimationFrame(tick);
+openMic();
+})();
+</script>
+
+</body></html>
